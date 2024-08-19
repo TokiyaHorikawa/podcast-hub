@@ -1,15 +1,9 @@
-import Header from "@/components/Header";
-import ContentCard from "@/app/contents/_components/ContentCard";
+import Article from "@/app/contents/_components/Article";
 
 const ContentDetail = ({ params }: { params: { id: string } }) => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <div className="flex flex-1">
-        <main className="flex-1 p-6">
-          <ContentCard id={params.id} />
-        </main>
-      </div>
+    <div className="max-w-[750px] mx-auto">
+      <Article />
     </div>
   );
 };
