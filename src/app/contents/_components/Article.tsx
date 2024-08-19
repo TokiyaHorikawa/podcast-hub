@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge"; // 新しいインポート
+import { Badge } from "@/components/ui/badge";
+import LikeButton from "./LikeButton";
 
 export interface Content {
   title: string;
@@ -53,6 +54,9 @@ const Article = ({ content }: { content: Content }) => {
       <Separator />
       <CardContent className="pt-6">
         <div className="prose max-w-none">{content.body}</div>
+        <div className="mt-6 flex items-center">
+          <LikeButton />
+        </div>
       </CardContent>
     </Card>
   );
