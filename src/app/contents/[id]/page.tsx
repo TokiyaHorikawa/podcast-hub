@@ -16,6 +16,7 @@ function getContent(id: string): Content {
       image: "https://example.com/avatar.jpg",
     },
     publishedAt: "2023年4月1日",
+    type: "showNote",
   };
 }
 

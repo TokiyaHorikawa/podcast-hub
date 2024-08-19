@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge"; // 新しいインポート
 
 export interface Content {
   title: string;
@@ -10,13 +11,32 @@ export interface Content {
     image: string;
   };
   publishedAt: string;
+  type: "showNote" | "annotation" | "review";
 }
 
+const getContentTypeLabel = (type: Content["type"]) => {
+  switch (type) {
+    case "showNote":
+      return "まとめ・文字起こし";
+    case "annotation":
+      return "補足・資料";
+    case "review":
+      return "感想・レビュー";
+    default:
+      return "";
+  }
+};
+
 const Article = ({ content }: { content: Content }) => {
+  const typeLabel = getContentTypeLabel(content.type);
+
   return (
     <Card className="max-w-[750px] mx-auto">
       <CardHeader>
-        <CardTitle className="text-3xl font-bold">{content.title}</CardTitle>
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-3xl font-bold">{content.title}</CardTitle>
+          <Badge variant="secondary">{typeLabel}</Badge>
+        </div>
         <div className="flex items-center space-x-4 mt-4">
           <Avatar>
             <AvatarImage src={content.author.image} alt={content.author.name} />
