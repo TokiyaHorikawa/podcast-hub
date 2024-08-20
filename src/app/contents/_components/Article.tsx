@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import LikeButton from "./LikeButton";
+import Link from "next/link";
 
 export interface Content {
   title: string;
@@ -13,6 +14,12 @@ export interface Content {
   };
   publishedAt: string;
   type: "showNote" | "annotation" | "review";
+  podcastEpisode: PodcastEpisode;
+}
+
+interface PodcastEpisode {
+  title: string;
+  id: string;
 }
 
 const getContentTypeLabel = (type: Content["type"]) => {
@@ -51,6 +58,16 @@ const Article = ({ content }: { content: Content }) => {
           </div>
         </div>
       </CardHeader>
+      <Separator />
+      <div className="px-6 py-4 bg-muted">
+        <p className="text-sm font-medium mb-1">引用元Podcastエピソード：</p>
+        <Link
+          href={`/episodes/${content.podcastEpisode.id}`}
+          className="text-primary hover:underline"
+        >
+          {content.podcastEpisode.title}
+        </Link>
+      </div>
       <Separator />
       <CardContent className="pt-6">
         <div className="prose max-w-none">{content.body}</div>

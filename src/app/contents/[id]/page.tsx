@@ -17,6 +17,10 @@ function getContent(id: string): Content {
     },
     publishedAt: "2023年4月1日",
     type: "showNote",
+    podcastEpisode: {
+      id: "1",
+      title: "Podcastエピソードのタイトル",
+    },
   };
 }
 
