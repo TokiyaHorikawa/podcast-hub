@@ -1,5 +1,5 @@
 import Article from "@/app/contents/_components/Article";
-import type { Content } from "../_components/Article";
+import type { Content } from "@/lib/types";
 
 const ContentDetail = ({ params }: { params: { id: string } }) => {
   const content: Content = getContent(params.id);
@@ -20,6 +20,9 @@ function getContent(id: string): Content {
     podcastEpisode: {
       id: "1",
       title: "Podcastエピソードのタイトル",
+      description: "Podcastエピソードの詳細な説明です。",
+      imageUrl:
+        "https://i.scdn.co/image/ab67656300005f1fb412cc05140e5eedc61ac87d",
     },
   };
 }

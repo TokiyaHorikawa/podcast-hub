@@ -4,23 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import LikeButton from "./LikeButton";
 import Link from "next/link";
-
-export interface Content {
-  title: string;
-  body: string;
-  author: {
-    name: string;
-    image: string;
-  };
-  publishedAt: string;
-  type: "showNote" | "annotation" | "review";
-  podcastEpisode: PodcastEpisode;
-}
-
-interface PodcastEpisode {
-  title: string;
-  id: string;
-}
+import type { Content } from "@/lib/types";
 
 const getContentTypeLabel = (type: Content["type"]) => {
   switch (type) {
