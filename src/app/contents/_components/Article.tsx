@@ -3,17 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import LikeButton from "./LikeButton";
-
-export interface Content {
-  title: string;
-  body: string;
-  author: {
-    name: string;
-    image: string;
-  };
-  publishedAt: string;
-  type: "showNote" | "annotation" | "review";
-}
+import Link from "next/link";
+import type { Content } from "@/lib/types";
 
 const getContentTypeLabel = (type: Content["type"]) => {
   switch (type) {
@@ -51,6 +42,16 @@ const Article = ({ content }: { content: Content }) => {
           </div>
         </div>
       </CardHeader>
+      <Separator />
+      <div className="px-6 py-4 bg-muted">
+        <p className="text-sm font-medium mb-1">引用元Podcastエピソード：</p>
+        <Link
+          href={`/episodes/${content.podcastEpisode.id}`}
+          className="text-primary hover:underline"
+        >
+          {content.podcastEpisode.title}
+        </Link>
+      </div>
       <Separator />
       <CardContent className="pt-6">
         <div className="prose max-w-none">{content.body}</div>
