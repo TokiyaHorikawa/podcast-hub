@@ -1,9 +1,8 @@
 import React from "react";
 import type { PodcastEpisode } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
+import EpisodeParentChannel from "./EpisodeParentChanel";
 
 interface EpisodeDetailProps {
   episode: PodcastEpisode;
@@ -14,13 +13,6 @@ const EpisodeDetail: React.FC<EpisodeDetailProps> = ({ episode }) => {
     <Card className="max-w-[750px] mx-auto">
       <CardHeader>
         <div className="flex items-center space-x-4">
-          <Image
-            src={episode.imageUrl}
-            alt={episode.title}
-            width={80}
-            height={80}
-            className="rounded-lg"
-          />
           <div>
             <CardTitle className="text-3xl font-bold">
               {episode.title}
@@ -30,6 +22,7 @@ const EpisodeDetail: React.FC<EpisodeDetailProps> = ({ episode }) => {
             </p>
           </div>
         </div>
+        <EpisodeParentChannel channel={episode.channel} />
       </CardHeader>
       <Separator />
       <CardContent className="pt-6">
