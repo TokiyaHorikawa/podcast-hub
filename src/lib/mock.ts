@@ -1,4 +1,4 @@
-import type { Content, PodcastEpisode, Channel } from "@/lib/types";
+import type { Content, Episode, Channel } from "@/lib/types";
 
 export function generateMockContent(id: string): Content {
   return {
@@ -10,11 +10,11 @@ export function generateMockContent(id: string): Content {
     },
     publishedAt: "2023年4月1日",
     type: "showNote",
-    podcastEpisode: generateMockEpisode("1"),
+    episode: generateMockEpisode("1"),
   };
 }
 
-export function generateMockEpisode(id: string): PodcastEpisode {
+export function generateMockEpisode(id: string): Episode {
   return {
     id,
     title: `エピソード ${id} のタイトル`,

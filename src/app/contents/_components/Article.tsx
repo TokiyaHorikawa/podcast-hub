@@ -46,10 +46,10 @@ const Article = ({ content }: { content: Content }) => {
       <div className="px-6 py-4 bg-muted">
         <p className="text-sm font-medium mb-1">引用元Podcastエピソード：</p>
         <Link
-          href={`/episodes/${content.podcastEpisode.id}`}
+          href={`/episodes/${content.episode.id}`}
           className="text-primary hover:underline"
         >
-          {content.podcastEpisode.title}
+          {content.episode.title}
         </Link>
       </div>
       <Separator />

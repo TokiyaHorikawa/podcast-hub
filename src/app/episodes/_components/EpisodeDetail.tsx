@@ -1,11 +1,11 @@
 import React from "react";
-import type { PodcastEpisode } from "@/lib/types";
+import type { Episode } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import EpisodeParentChannel from "./EpisodeParentChanel";
 
 interface EpisodeDetailProps {
-  episode: PodcastEpisode;
+  episode: Episode;
 }
 
 const EpisodeDetail: React.FC<EpisodeDetailProps> = ({ episode }) => {

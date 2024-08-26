@@ -7,10 +7,10 @@ export interface Content {
   };
   publishedAt: string;
   type: "showNote" | "annotation" | "review";
-  podcastEpisode: PodcastEpisode;
+  episode: Episode;
 }
 
-export interface PodcastEpisode {
+export interface Episode {
   id: string;
   title: string;
   description: string;
