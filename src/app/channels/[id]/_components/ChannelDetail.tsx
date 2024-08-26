@@ -1,21 +1,36 @@
 import type { Channel } from "@/lib/types";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
 
 interface ChannelDetailsProps {
   channel: Channel;
 }
 
-// WIP: ひとまずの箱
 const ChannelDetail: React.FC<ChannelDetailsProps> = ({ channel }) => {
   return (
-    <div>
-      ChannelDetails
-      <Card>
-        <CardHeader>
+    <Card className="max-w-[750px] mx-auto">
+      <CardHeader>
+        <div className="flex items-center space-x-4">
+          <Image
+            src={channel.imageUrl}
+            alt={channel.name}
+            width={100}
+            height={100}
+            className="rounded-full"
+          />
           <CardTitle>{channel.name}</CardTitle>
-        </CardHeader>
-      </Card>
-    </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <CardDescription>{channel.description}</CardDescription>
+      </CardContent>
+    </Card>
   );
 };
 
