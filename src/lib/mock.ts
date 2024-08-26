@@ -1,4 +1,4 @@
-import type { Content, PodcastEpisode } from "@/lib/types";
+import type { Content, Episode, Channel } from "@/lib/types";
 
 export function generateMockContent(id: string): Content {
   return {
@@ -10,21 +10,26 @@ export function generateMockContent(id: string): Content {
     },
     publishedAt: "2023年4月1日",
     type: "showNote",
-    podcastEpisode: {
-      id: "1",
-      title: "Podcastエピソードのタイトル",
-      description: "Podcastエピソードの詳細な説明です。",
-      imageUrl:
-        "https://i.scdn.co/image/ab67656300005f1fb412cc05140e5eedc61ac87d",
-    },
+    episode: generateMockEpisode("1"),
   };
 }
 
-export function generateMockEpisode(id: string): PodcastEpisode {
+export function generateMockEpisode(id: string): Episode {
   return {
     id,
     title: `エピソード ${id} のタイトル`,
     description: `これはエピソード ${id} の詳細な説明です。このポッドキャストエピソードでは、興味深いトピックについて議論し、リスナーに価値ある情報を提供します。`,
+    imageUrl:
+      "https://i.scdn.co/image/ab67656300005f1fb412cc05140e5eedc61ac87d",
+    channel: generateMockChannel("1"),
+  };
+}
+
+export function generateMockChannel(id: string): Channel {
+  return {
+    id,
+    name: `チャンネル ${id} のタイトル`,
+    description: `これはチャンネル ${id} の詳細な説明です。このポッドキャストチャンネルでは、興味深いトピックについて議論し、リスナーに価値ある情報を提供します。`,
     imageUrl:
       "https://i.scdn.co/image/ab67656300005f1fb412cc05140e5eedc61ac87d",
   };
