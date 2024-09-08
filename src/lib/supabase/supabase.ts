@@ -1,3 +1,4 @@
+// TODO: 要らないかも
 import { createClient } from "@supabase/supabase-js";
 
 export type Database = {};
