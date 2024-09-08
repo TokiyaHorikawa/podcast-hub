@@ -1,16 +1,17 @@
-import type { Content, Episode, Channel } from "@/lib/types";
+import type { Content, Author, Episode, Channel } from "@/lib/types";
 
-export function generateMockContent(id: string): Content {
+export function generateMockContent(id: number): Content {
   return {
+    id,
     title: `タイトル ${id}`,
     body: `コンテンツ ${id}の詳細な説明です。このコンテンツは、さまざまな情報を提供し、読者にとって有益な内容を含んでいます。さらに、関連するトピックや事例を交えながら、深く掘り下げていきます。最終的には、読者がこの情報を活用できるように、具体的なアクションプランや提案も含めています。`,
-    author: {
-      name: "山田太郎",
-      image: "https://example.com/avatar.jpg",
-    },
-    publishedAt: "2023年4月1日",
-    type: "showNote",
-    episode: generateMockEpisode("1"),
+  };
+}
+
+export function generateMockAuthor(): Author {
+  return {
+    name: "山田太郎",
+    image: "https://example.com/avatar.jpg",
   };
 }
 

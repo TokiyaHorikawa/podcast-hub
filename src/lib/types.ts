@@ -1,13 +1,12 @@
 export interface Content {
+  id: number;
   title: string;
   body: string;
-  author: {
-    name: string;
-    image: string;
-  };
-  publishedAt: string;
-  type: "showNote" | "annotation" | "review";
-  episode: Episode;
+}
+
+export interface Author {
+  name: string;
+  image: string;
 }
 
 export interface Episode {
