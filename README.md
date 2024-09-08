@@ -39,3 +39,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 1. `brew install supabase/tap/supabase`
 2. `supabase start`
+
+### Local Supabase
+
+https://supabase.com/docs/guides/cli/local-development
+
+env は `supabase start` で出力された値を用いる
+
+Local プロジェクト
+http://localhost:54323/project/default
