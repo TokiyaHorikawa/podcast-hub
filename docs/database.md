@@ -10,6 +10,10 @@ erDiagram
     episodes ||--o{ articles : "記事"
     articles ||--o{ comments : "コメント"
     users ||--o{ comments : "コメント"
+    episodes ||--o{ likes : "いいね"
+    users ||--o{ likes : "いいね"
+    articles ||--o{ article_tags : "記事とタグの関連"
+    tags ||--o{ article_tags : "記事とタグの関連"
 
     users {
         ID id PK
@@ -56,5 +60,25 @@ erDiagram
         TEXT content "NOT NULL"
         TIMESTAMP create_at "DEFAULT CREATE_TIMESTAMP"
         TIMESTAMP update_at "DEFAULT UPDATE_TIMESTAMP"
+    }
+
+    likes {
+        ID id PK
+        ID user_id FK
+        ID article_id FK
+        TIMESTAMP create_at "DEFAULT CREATE_TIMESTAMP"
+    }
+
+    tags {
+        ID id PK
+        VARCHAR name "NOT NULL"
+        TIMESTAMP create_at "DEFAULT CREATE_TIMESTAMP"
+        TIMESTAMP update_at "DEFAULT UPDATE_TIMESTAMP"
+    }
+
+    article_tags {
+        ID article_id FK
+        ID tag_id FK
+        TIMESTAMP create_at "DEFAULT CREATE_TIMESTAMP"
     }
 ```
