@@ -24,6 +24,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 1. `brew install supabase/tap/supabase`
 2. `supabase start`
+3. `supabase stop` （停止する時）
 
 ### Local Supabase
 
