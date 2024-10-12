@@ -1,5 +1,5 @@
 export interface Content {
-  id: number;
+  id: bigint;
   title: string;
   body: string;
 }

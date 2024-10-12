@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Article from "@/app/contents/_components/Article";
 import type { Content } from "@/lib/types";
-import { createClient } from "@/lib/supabase/server";
+import { PrismaClient } from "@prisma/client";
 import { generateMockAuthor, generateMockEpisode } from "@/lib/mock";
+
 export const metadata: Metadata = {
   title: "コンテンツ詳細 - Podcast Hub",
   description: "Podcastに貢献できる場所",
 };
+
+const prisma: PrismaClient = new PrismaClient();
 
 const ContentDetail = async ({ params }: { params: { id: string } }) => {
   const content = await getContent(params.id);
@@ -16,12 +19,14 @@ const ContentDetail = async ({ params }: { params: { id: string } }) => {
 };
 
 async function getContent(id: string): Promise<Content> {
-  const supabase = createClient();
-  const { data } = await supabase
-    .from("contents")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const numberId = Number(id);
+  const data = await prisma.content.findUnique({
+    where: { id: numberId },
+  });
+
+  if (!data) {
+    throw new Error("Content not found");
+  }
 
   return {
     id: data.id,
