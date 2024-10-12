@@ -16,7 +16,9 @@ const Header = () => {
           <AvatarImage src="https://avatars.githubusercontent.com/u/33023225?v=4" />
           <AvatarFallback>User Name</AvatarFallback>
         </Avatar>
-        <Button>ログイン</Button>
+        <Link href={"/login"}>
+          <Button>ログイン</Button>
+        </Link>
       </div>
     </header>
   );
