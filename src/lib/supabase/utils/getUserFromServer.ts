@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "./server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
