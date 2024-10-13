@@ -34,3 +34,18 @@ env は `supabase start` で出力された値を用いる
 
 Local プロジェクト
 http://localhost:54323/project/default
+
+### Prisma migration
+
+`schema.prisma`で schema 変更をしたら、マイグレーションを実行する
+（docker の Local データが吹き飛ぶので seeds を用意しておくと良い）
+
+```
+npx prisma migrate dev --name {migration name}
+```
+
+prisma 初期化をしていない場合
+
+```
+npx prisma init
+```
