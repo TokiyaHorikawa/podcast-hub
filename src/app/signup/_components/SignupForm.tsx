@@ -12,28 +12,25 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-// TODO: サインアップ用のフックを作成する必要があります
-// import useSignUp from "../_hooks/useSignUp";
+import useSignUpWithPassword from "../_hooks/useSignUpWithPassword";
 
 export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState(""); // ユーザー名の状態を追加
   const [isLoading, setIsLoading] = useState(false);
-  // TODO: サインアップ用のフックを実装する
-  // const { signUp, error } = useSignUp();
+  const { signUp, error } = useSignUpWithPassword();
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     if (password !== confirmPassword) {
-      // TODO: エラー処理を実装する
       console.error("パスワードが一致しません");
       setIsLoading(false);
       return;
     }
-    // TODO: サインアップ処理を実装する
-    // await signUp({ email, password });
+    await signUp({ email, password, username }); // ユーザー名を含める
     setIsLoading(false);
   };
 
@@ -48,6 +45,18 @@ export default function SignupForm() {
         </CardHeader>
         <form onSubmit={handleSignup}>
           <CardContent className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="username">ユーザー名</Label>{" "}
+              {/* ユーザー名のラベル */}
+              <Input
+                id="username"
+                type="text"
+                placeholder="ユーザー名"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">メールアドレス</Label>
               <Input
@@ -86,10 +95,9 @@ export default function SignupForm() {
             </Button>
           </CardFooter>
         </form>
-        {/* TODO: エラー表示を実装する */}
-        {/* {error && (
-        <p className="text-sm text-red-500 text-center mt-2">{error}</p>
-        )} */}
+        {error && (
+          <p className="text-sm text-red-500 text-center mt-2">{error}</p>
+        )}
       </Card>
     </div>
   );
