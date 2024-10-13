@@ -13,8 +13,8 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import useUser from "./useUser";
-import useSignInWithPassword from "./useSignInWithPassword";
+import useUser from "../_hooks/useUser";
+import useSignInWithPassword from "../_hooks/useSignInWithPassword";
 
 export default function Login() {
   // TODO: Form Library使う？

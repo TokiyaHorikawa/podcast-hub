@@ -21,6 +21,7 @@ export async function getUserFromServer(context: GetServerSidePropsContext) {
     return null;
   }
 
+  // TODO: UIDでuserを取得できるようにしたい
   const dbUser = await prisma.user.findFirst({
     where: { email: user.email },
   });
