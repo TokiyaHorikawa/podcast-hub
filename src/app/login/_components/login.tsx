@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,7 +12,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import useUser from "../_hooks/useUser";
+import useUser from "@/hooks/useUser";
 import useSignInWithPassword from "../_hooks/useSignInWithPassword";
 
 export default function Login() {
