@@ -22,7 +22,7 @@ export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { signUp, error } = useSignUpWithPassword();
 
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     if (password !== confirmPassword) {
@@ -43,7 +43,7 @@ export default function SignupForm() {
             以下の情報を入力して新しいアカウントを作成してください
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSignup}>
+        <form onSubmit={handleSignUp}>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="username">ユーザー名</Label>{" "}
