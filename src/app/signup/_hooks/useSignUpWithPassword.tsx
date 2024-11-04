@@ -3,8 +3,6 @@ import { useRouter } from "next/navigation";
 import supabase from "@/lib/supabase/supabase";
 import { PrismaClient } from "@prisma/client";
 
-const prisma: PrismaClient = new PrismaClient();
-
 type SignUpParams = {
   email: string;
   password: string;
@@ -13,20 +11,30 @@ type SignUpParams = {
 
 // TODO: Prismaはサーバーサイドでしか実行できないので、server actions等を検討する
 
-export default function useSignUpWithPassword() {
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
-  const setErrorMessage = (errMessage: string) => setError(errMessage);
-  const resetErrorMessage = () => setError(null);
-  const redirectLoginPage = () => router.push("/login");
+async function signUpAuth(
+  email: SignUpParams["email"],
+  password: SignUpParams["password"]
+): Promise<{ userId: string | undefined }> {
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  if (error) throw error;
 
-  const signUp = makeSignUp(
-    setErrorMessage,
-    resetErrorMessage,
-    redirectLoginPage
-  );
+  return { userId: data?.user?.id };
+}
 
-  return { signUp, error };
+async function createUser(
+  userId: string,
+  username: SignUpParams["username"],
+  email: SignUpParams["email"]
+): Promise<void> {
+  const prisma: PrismaClient = new PrismaClient();
+  try {
+    await prisma.user.create({
+      data: { uid: userId, name: username, email },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 function makeSignUp(
@@ -53,28 +61,18 @@ function makeSignUp(
   };
 }
 
-async function signUpAuth(
-  email: SignUpParams["email"],
-  password: SignUpParams["password"]
-): Promise<{ userId: string | undefined }> {
-  const { data, error } = await supabase.auth.signUp({ email, password });
+export default function useSignUpWithPassword() {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const setErrorMessage = (errMessage: string) => setError(errMessage);
+  const resetErrorMessage = () => setError(null);
+  const redirectLoginPage = () => router.push("/login");
 
-  if (error) throw error;
+  const signUp = makeSignUp(
+    setErrorMessage,
+    resetErrorMessage,
+    redirectLoginPage
+  );
 
-  return { userId: data?.user?.id };
-}
-
-async function createUser(
-  userId: string,
-  username: SignUpParams["username"],
-  email: SignUpParams["email"]
-): Promise<void> {
-  try {
-    await prisma.user.create({
-      data: { uid: userId, name: username, email },
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return { signUp, error };
 }
