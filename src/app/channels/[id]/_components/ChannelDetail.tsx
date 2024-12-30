@@ -1,12 +1,12 @@
-import type { Channel } from "@/lib/types";
-import Image from "next/image";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
+import type { Channel } from "@/lib/types";
+import Image from "next/image";
 
 interface ChannelDetailsProps {
   channel: Channel;

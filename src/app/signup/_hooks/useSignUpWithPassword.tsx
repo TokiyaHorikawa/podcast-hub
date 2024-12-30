@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { signUp } from "./signUp.action";
 
 export type SignUpParams = {
@@ -11,7 +11,7 @@ export type SignUpParams = {
 function makeSignUp(
   setErrorMessage: (errMessage: string) => void,
   resetErrorMessage: () => void,
-  redirectLoginPage: () => void
+  redirectLoginPage: () => void,
 ) {
   return async ({ email, password, username }: SignUpParams) => {
     resetErrorMessage();
@@ -36,7 +36,7 @@ export default function useSignUpWithPassword() {
   const signUp = makeSignUp(
     setErrorMessage,
     resetErrorMessage,
-    redirectLoginPage
+    redirectLoginPage,
   );
 
   return { signUp, error };

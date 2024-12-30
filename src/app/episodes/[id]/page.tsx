@@ -1,7 +1,7 @@
+import { generateMockEpisode } from "@/lib/mock";
+import type { Episode } from "@/lib/types";
 import type { Metadata } from "next";
 import EpisodeDetail from "../_components/EpisodeDetail";
-import type { Episode } from "@/lib/types";
-import { generateMockEpisode } from "@/lib/mock";
 
 export const metadata: Metadata = {
   title: "エピソード詳細 - Podcast Hub",

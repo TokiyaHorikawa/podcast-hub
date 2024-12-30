@@ -1,4 +1,4 @@
-import type { Content, Author, Episode, Channel } from "@/lib/types";
+import type { Author, Channel, Content, Episode } from "@/lib/types";
 
 export function generateMockContent(id: bigint): Content {
   return {

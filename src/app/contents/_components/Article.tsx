@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import LikeButton from "./LikeButton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import type { Author, Content, Episode } from "@/lib/types";
 import Link from "next/link";
-import type { Content, Author, Episode } from "@/lib/types";
+import LikeButton from "./LikeButton";
 
 const Article = ({
   content,
@@ -25,7 +25,7 @@ const Article = ({
         <div className="flex items-center space-x-4 mt-4">
           <Avatar>
             <AvatarImage src={author.image} alt={author.name} />
-            <AvatarFallback></AvatarFallback>
+            <AvatarFallback />
           </Avatar>
           <div>
             <p className="text-sm font-medium">{author.name}</p>

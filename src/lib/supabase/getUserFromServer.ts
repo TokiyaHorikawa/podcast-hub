@@ -1,6 +1,6 @@
-import { GetServerSidePropsContext } from "next";
-import { createClient } from "./server";
 import { PrismaClient } from "@prisma/client";
+import type { GetServerSidePropsContext } from "next";
+import { createClient } from "./server";
 
 const prisma = new PrismaClient();
 
