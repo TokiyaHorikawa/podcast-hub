@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,8 +12,9 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import useUser from "./useUser";
-import useSignInWithPassword from "./useSignInWithPassword";
+import useUser from "@/hooks/useUser";
+import useSignInWithPassword from "../_hooks/useSignInWithPassword";
+import Link from "next/link";
 
 export default function Login() {
   // TODO: Form Library使う？
@@ -68,6 +68,14 @@ export default function Login() {
               ログイン
             </Button>
             {error && <p className="text-red-500 mt-2">{error}</p>}
+            <div className="mt-4 text-center">
+              <p className="text-sm text-gray-600">
+                アカウントをお持ちでない方は
+                <Link href="/signup" className="text-blue-600 hover:underline">
+                  サインアップ
+                </Link>
+              </p>
+            </div>
           </CardFooter>
         </form>
       </Card>

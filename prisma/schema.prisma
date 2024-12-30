@@ -15,6 +15,7 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
+  uid       String   @unique // supabase authのid
   name      String
   email     String   @unique
   createdAt DateTime @default(now())
