@@ -1,6 +1,6 @@
 import type { Content, Author, Episode, Channel } from "@/lib/types";
 
-export function generateMockContent(id: number): Content {
+export function generateMockContent(id: bigint): Content {
   return {
     id,
     title: `タイトル ${id}`,
