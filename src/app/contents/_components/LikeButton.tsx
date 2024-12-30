@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThumbsUp } from "lucide-react";
+import { useState } from "react";
 
 const LikeButton = () => {
   const [likes, setLikes] = useState(0);

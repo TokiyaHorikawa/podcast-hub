@@ -1,7 +1,7 @@
-import React from "react";
-import type { Episode } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import type { Episode } from "@/lib/types";
+import React from "react";
 import EpisodeParentChannel from "./EpisodeParentChanel";
 
 interface EpisodeDetailProps {

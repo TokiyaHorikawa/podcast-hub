@@ -1,7 +1,7 @@
 "use client";
 
-import supabase from "./supabase";
 import { PrismaClient } from "@prisma/client";
+import supabase from "./supabase";
 
 const prisma = new PrismaClient();
 

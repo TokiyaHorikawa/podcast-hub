@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { CardTitle } from "@/components/ui/card";
 import type { Channel } from "@/lib/types";
+import Image from "next/image";
 import Link from "next/link";
 
 const EpisodeParentChannel = ({ channel }: { channel: Channel }) => {

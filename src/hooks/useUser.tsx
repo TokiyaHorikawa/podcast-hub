@@ -1,8 +1,8 @@
 "use client";
 
-import useSWR from "swr";
 import { getUserFromClient } from "@/lib/supabase/getUserFromClient";
 import { useRouter } from "next/navigation";
+import useSWR from "swr";
 
 export default function useUser() {
   const router = useRouter();

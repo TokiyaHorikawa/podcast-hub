@@ -1,11 +1,11 @@
 "use server";
 import supabase from "@/lib/supabase/supabase";
-import type { SignUpParams } from "./useSignUpWithPassword";
 import { PrismaClient } from "@prisma/client";
+import type { SignUpParams } from "./useSignUpWithPassword";
 
 async function signUpAuth(
   email: SignUpParams["email"],
-  password: SignUpParams["password"]
+  password: SignUpParams["password"],
 ): Promise<{ userId: string | undefined }> {
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) {
@@ -19,7 +19,7 @@ async function signUpAuth(
 async function createUser(
   userId: string,
   username: SignUpParams["username"],
-  email: SignUpParams["email"]
+  email: SignUpParams["email"],
 ): Promise<void> {
   const prisma: PrismaClient = new PrismaClient();
   try {

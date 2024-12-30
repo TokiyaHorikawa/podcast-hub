@@ -1,6 +1,6 @@
 "use client";
-import { useRouter } from "next/navigation";
 import supabase from "@/lib/supabase/supabase";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function useSignInWithPassword() {
@@ -27,7 +27,7 @@ export default function useSignInWithPassword() {
       router.push("/");
     } catch (error) {
       setError(
-        "ログインに失敗しました。メールアドレスとパスワードを確認してください。"
+        "ログインに失敗しました。メールアドレスとパスワードを確認してください。",
       );
       return { error };
     }

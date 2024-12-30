@@ -1,7 +1,7 @@
+import { generateMockChannel } from "@/lib/mock";
+import type { Channel } from "@/lib/types";
 import type { Metadata } from "next";
 import ChannelDetail from "./_components/ChannelDetail";
-import type { Channel } from "@/lib/types";
-import { generateMockChannel } from "@/lib/mock";
 
 export const metadata: Metadata = {
   title: "チャンネル詳細 - Podcast Hub",
