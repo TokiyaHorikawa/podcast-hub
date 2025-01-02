@@ -25,7 +25,9 @@ export interface Channel {
 }
 
 export interface User {
-  id: string;
+  id: number;
   name: string;
-  image_url: string;
+  uid: string;
+  email: string;
+  createdAt: Date;
 }
