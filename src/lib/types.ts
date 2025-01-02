@@ -23,3 +23,9 @@ export interface Channel {
   description: string;
   imageUrl: string;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  image_url: string;
+}

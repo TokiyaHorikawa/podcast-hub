@@ -24,6 +24,7 @@ export default function useSignInWithPassword() {
 
       if (error) throw error;
 
+      router.refresh();
       router.push("/");
     } catch (error) {
       setError(
