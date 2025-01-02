@@ -3,12 +3,12 @@
   "vcs": {
     "enabled": false,
     "clientKind": "git",
-    "useIgnoreFile": false
+    "useIgnoreFile": true
   },
   "files": {
     "ignoreUnknown": false,
     "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
-    "ignore": []
+    "ignore": ["node_modules/**", ".next/**"]
   },
   "formatter": {
     "enabled": true,

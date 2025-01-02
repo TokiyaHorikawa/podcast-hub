@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 const prisma = new PrismaClient();
 
@@ -9,11 +9,11 @@ export async function getUserFromServer() {
   const cookieStore = cookies();
 
   // デバッグ用：すべてのcookieを確認
-  console.log('All cookies:', cookieStore.getAll());
+  console.log("All cookies:", cookieStore.getAll());
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
     {
       cookies: {
         get(name) {
@@ -24,7 +24,7 @@ export async function getUserFromServer() {
         set(name, value, options) {
           try {
             console.log(`Cookie set: ${name}`);
-            cookieStore.set(name, value, options)
+            cookieStore.set(name, value, options);
           } catch {
             console.log(`Cookie set failed: ${name}`);
             // Server component での set は無視
@@ -33,22 +33,24 @@ export async function getUserFromServer() {
         remove(name, options) {
           try {
             console.log(`Cookie remove: ${name}`);
-            cookieStore.set(name, '', options)
+            cookieStore.set(name, "", options);
           } catch {
             console.log(`Cookie remove failed: ${name}`);
             // Server component での remove は無視
           }
         },
       },
-    }
-  )
+    },
+  );
 
-  const { data: { session } } = await supabase.auth.getSession()
-  console.log('Session:', session);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  console.log("Session:", session);
 
   if (!session?.user) {
-    console.log('No session or user found');
-    return null
+    console.log("No session or user found");
+    return null;
   }
 
   // TODO: UIDでuserを取得できるようにしたい
@@ -56,6 +58,6 @@ export async function getUserFromServer() {
     where: { email: session.user.email },
   });
 
-  console.log('DB User:', dbUser);
+  console.log("DB User:", dbUser);
   return dbUser;
 }
