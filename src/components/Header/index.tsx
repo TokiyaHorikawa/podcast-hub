@@ -1,9 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
 import Link from "next/link";
-import React from "react";
 
-const Header = () => {
+async function getUser() {
+  const user = await getUserFromServer();
+  return user;
+}
+
+const Header = async () => {
+  const user = await getUser();
+
   return (
     <header className="w-full h-16 flex items-center justify-between px-4">
       <Link href={"/"}>
@@ -11,14 +18,19 @@ const Header = () => {
       </Link>
 
       <div className="flex items-center space-x-2">
-        <Avatar>
-          {/* TODO: ユーザーのプロフィール画像を表示 */}
-          <AvatarImage src="https://avatars.githubusercontent.com/u/33023225?v=4" />
-          <AvatarFallback>User Name</AvatarFallback>
-        </Avatar>
-        <Link href={"/login"}>
-          <Button>ログイン</Button>
-        </Link>
+        {user ? (
+          <Link href={`/users/${user.id}`}>
+            <Avatar>
+              {/* 画像は未対応 */}
+              <AvatarImage src="https://avatars.githubusercontent.com/u/33023225?v=4" />
+              <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>
+            </Avatar>
+          </Link>
+        ) : (
+          <Link href={"/login"}>
+            <Button>ログイン</Button>
+          </Link>
+        )}
       </div>
     </header>
   );
