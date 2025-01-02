@@ -21,8 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run ESLint
-        run: npm run lint
-
+      # Biomeの方が速いので先に実行
       - name: Run Biome
         run: npx @biomejs/biome check ./src
+
+      - name: Run ESLint
+        run: npm run lint
