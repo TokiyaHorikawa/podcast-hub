@@ -3,21 +3,12 @@ import type { Content, User } from "@/lib/types";
 import UserContents from "./_components/UserContents.ui";
 import UserProfile from "./_components/UserProfile.ui";
 import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { getUser } from "./_api/getUser";
 
 interface Props {
   params: {
     id: string;
   };
-}
-
-async function getUser(id: string): Promise<User | null> {
-  const user = await prisma.user.findUnique({
-    where: { id: Number(id) },
-  });
-  return user;
 }
 
 async function getContents(id: string): Promise<Content[]> {

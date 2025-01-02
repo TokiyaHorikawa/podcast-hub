@@ -56,13 +56,24 @@ export async function middleware(req: NextRequest) {
       },
     });
 
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    try {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
 
-    // セッション情報をログ出力（デバッグ用）
-    console.log("Middleware Session:", session);
-    console.log("Middleware Cookies:", req.cookies.getAll());
+      if (error) {
+        console.error("Authentication error:", error);
+        return res;
+      }
+
+      // ユーザー情報をログ出力（デバッグ用）
+      console.log("Middleware authenticated user:", user?.id);
+    } catch (error) {
+      console.error("Error in middleware:", error);
+    }
+
+    return res;
   } catch (error) {
     console.error("Error in middleware:", error);
   }
