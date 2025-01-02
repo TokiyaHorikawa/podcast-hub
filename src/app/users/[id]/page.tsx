@@ -1,9 +1,9 @@
+import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
 import { createClient } from "@/lib/supabase/server";
 import type { Content, User } from "@/lib/types";
+import { getUser } from "./_api/getUser";
 import UserContents from "./_components/UserContents.ui";
 import UserProfile from "./_components/UserProfile.ui";
-import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
-import { getUser } from "./_api/getUser";
 
 interface Props {
   params: {

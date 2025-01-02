@@ -1,8 +1,8 @@
 "use server";
 
-import { createClient } from "./server";
 import prisma from "@/lib/prisma";
 import type { User } from "@/lib/types";
+import { createClient } from "./server";
 
 export async function getUserFromServer(): Promise<User | null> {
   const supabase = createClient();
