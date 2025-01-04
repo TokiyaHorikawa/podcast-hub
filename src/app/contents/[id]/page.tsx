@@ -1,6 +1,6 @@
 import Article from "@/app/contents/_components/Article";
-import { generateMockAuthor, generateMockEpisode } from "@/lib/mock";
-import type { Content } from "@/lib/types";
+import { generateMockEpisode } from "@/lib/mock";
+import type { Content, User } from "@/lib/types";
 import { PrismaClient } from "@prisma/client";
 import type { Metadata } from "next";
 
@@ -11,9 +11,17 @@ export const metadata: Metadata = {
 
 const prisma: PrismaClient = new PrismaClient();
 
+const mockUser: User = {
+  id: 1,
+  name: "山田太郎",
+  uid: "user1",
+  email: "user1@example.com",
+  createdAt: new Date(),
+};
+
 const ContentDetail = async ({ params }: { params: { id: string } }) => {
   const content = await getContent(params.id);
-  const author = generateMockAuthor();
+  const author = mockUser;
   const episode = generateMockEpisode(params.id);
   return <Article content={content} author={author} episode={episode} />;
 };

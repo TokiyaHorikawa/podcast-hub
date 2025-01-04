@@ -4,11 +4,6 @@ export interface Content {
   body: string;
 }
 
-export interface Author {
-  name: string;
-  image: string;
-}
-
 export interface Episode {
   id: string;
   title: string;
@@ -28,6 +23,6 @@ export interface User {
   id: number;
   name: string;
   uid: string;
-  email: string;
+  email: string; // メールアドレスは自分のデータだけの時に取得で良さそう
   createdAt: Date;
 }

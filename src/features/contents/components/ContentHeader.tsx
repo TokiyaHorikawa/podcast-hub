@@ -1,18 +1,21 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CardHeader } from "@/components/ui/card";
+import AvatorUser from "@/features/users/AvatorUser";
+
+const mockUser = {
+  id: 1,
+  name: "ユーザー名",
+  uid: "user1",
+  email: "user1@example.com",
+  createdAt: new Date(),
+};
 
 const ContentHeader = () => {
+  const user = mockUser;
   return (
     <CardHeader>
       <div className="flex items-center space-x-2">
-        <Avatar className="h-8 w-8">
-          <AvatarImage
-            className="h-8 w-8"
-            src="https://avatars.githubusercontent.com/u/33023225?v=4"
-          />
-          <AvatarFallback className="h-8 w-8">SH</AvatarFallback>
-        </Avatar>
-        <p>ユーザー名</p>
+        <AvatorUser user={user} iconSize="sm" />
+        <p>{user.name}</p>
       </div>
     </CardHeader>
   );
