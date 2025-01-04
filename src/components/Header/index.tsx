@@ -1,5 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import AvatorUser from "@/features/users/AvatorUser";
 import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
 import Link from "next/link";
 
@@ -19,13 +19,7 @@ const Header = async () => {
 
       <div className="flex items-center space-x-2">
         {user ? (
-          <Link href={`/users/${user.id}`}>
-            <Avatar>
-              {/* 画像は未対応 */}
-              <AvatarImage src="https://avatars.githubusercontent.com/u/33023225?v=4" />
-              <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>
-            </Avatar>
-          </Link>
+          <AvatorUser user={user} />
         ) : (
           <Link href={"/login"}>
             <Button>ログイン</Button>
