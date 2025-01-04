@@ -2,7 +2,7 @@
 
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
-import { EditorProvider } from "@tiptap/react";
+import { EditorProvider, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Menu from "./RichEditorMenu";
 
@@ -18,11 +18,20 @@ const extensions = [
   Image,
 ];
 
-const RichEditor = () => {
+interface RichEditorProps {
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
+const RichEditor = ({ value, onChange }: RichEditorProps) => {
   return (
     <EditorProvider
       extensions={extensions}
       slotBefore={<Menu />}
+      content={value}
+      onUpdate={({ editor }) => {
+        onChange?.(editor.getHTML());
+      }}
       immediatelyRender={false}
       editorProps={{
         attributes: {
