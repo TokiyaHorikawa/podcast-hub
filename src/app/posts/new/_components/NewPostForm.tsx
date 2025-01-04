@@ -5,43 +5,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Image from "@tiptap/extension-image";
-import Link from "@tiptap/extension-link";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Menu from "./Menu";
+import RichEditor from "./RichEditor";
 
 export default function NewPostForm() {
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [1, 2, 3],
-        },
-      }),
-      Link.configure({
-        openOnClick: false,
-      }),
-      Image,
-    ],
-    content: "",
-    editorProps: {
-      attributes: {
-        class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[400px] p-4",
-      },
-    },
-    autofocus: true,
-    parseOptions: {
-      preserveWhitespace: true,
-    },
-    immediatelyRender: false,
-  });
-
-  if (!editor) {
-    return null;
-  }
-
   return (
     <form className="space-y-8">
       <div className="space-y-2">
@@ -62,13 +28,12 @@ export default function NewPostForm() {
           </TabsList>
           <TabsContent value="write">
             <Card>
-              <Menu editor={editor} />
-              <EditorContent editor={editor} />
+              <RichEditor />
             </Card>
           </TabsContent>
           <TabsContent value="preview">
             <Card className="p-4 prose">
-              <div className="min-h-[400px]">{editor?.getHTML()}</div>
+              {/* <div className="min-h-[400px]">{editor?.getHTML()}</div> */}
             </Card>
           </TabsContent>
         </Tabs>
