@@ -4,7 +4,7 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import { EditorProvider } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Menu from "./Menu";
+import Menu from "./RichEditorMenu";
 
 const extensions = [
   StarterKit.configure({
