@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import AvatorUser from "@/features/users/AvatorUser";
 import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
 import Link from "next/link";
+import AuthenticatedHeader from "./AuthenticatedHeader";
+import LoginButton from "./LoginButton";
 
 async function getUser() {
   const user = await getUserFromServer();
@@ -10,6 +10,7 @@ async function getUser() {
 
 const Header = async () => {
   const user = await getUser();
+  const isLogin = !!user;
 
   return (
     <header className="w-full h-16 flex items-center justify-between px-4">
@@ -18,13 +19,7 @@ const Header = async () => {
       </Link>
 
       <div className="flex items-center space-x-2">
-        {user ? (
-          <AvatorUser user={user} />
-        ) : (
-          <Link href={"/login"}>
-            <Button>ログイン</Button>
-          </Link>
-        )}
+        {isLogin ? <AuthenticatedHeader user={user} /> : <LoginButton />}
       </div>
     </header>
   );
