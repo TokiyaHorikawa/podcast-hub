@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RichEditor from "./RichEditor";
 
 export default function NewPostForm() {
@@ -21,22 +20,9 @@ export default function NewPostForm() {
 
       <div className="space-y-2">
         <Label>本文</Label>
-        <Tabs defaultValue="write" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="write">編集</TabsTrigger>
-            <TabsTrigger value="preview">プレビュー</TabsTrigger>
-          </TabsList>
-          <TabsContent value="write">
-            <Card>
-              <RichEditor />
-            </Card>
-          </TabsContent>
-          <TabsContent value="preview">
-            <Card className="p-4 prose">
-              {/* <div className="min-h-[400px]">{editor?.getHTML()}</div> */}
-            </Card>
-          </TabsContent>
-        </Tabs>
+        <Card>
+          <RichEditor />
+        </Card>
       </div>
 
       <div className="flex justify-between">
