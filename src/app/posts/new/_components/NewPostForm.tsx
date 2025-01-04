@@ -9,11 +9,16 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useCallback } from "react";
 
 export default function NewPostForm() {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2, 3],
+        },
+      }),
       Link.configure({
         openOnClick: false,
       }),
@@ -23,10 +28,26 @@ export default function NewPostForm() {
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none",
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[400px] p-4",
       },
     },
+    autofocus: true,
+    parseOptions: {
+      preserveWhitespace: true,
+    },
+    immediatelyRender: false,
   });
+
+  const setLink = useCallback(() => {
+    const url = window.prompt("URL を入力してください:");
+    if (url && editor) {
+      editor.chain().focus().setLink({ href: url }).run();
+    }
+  }, [editor]);
+
+  if (!editor) {
+    return null;
+  }
 
   return (
     <form className="space-y-8">
@@ -47,13 +68,83 @@ export default function NewPostForm() {
             <TabsTrigger value="preview">プレビュー</TabsTrigger>
           </TabsList>
           <TabsContent value="write">
-            <Card className="p-4">
-              <EditorContent editor={editor} className="min-h-[400px]" />
+            <Card>
+              <div className="border-b p-2 flex gap-2 flex-wrap">
+                <Button
+                  size="sm"
+                  variant={
+                    editor.isActive("heading", { level: 1 })
+                      ? "default"
+                      : "outline"
+                  }
+                  onClick={() =>
+                    editor.chain().focus().toggleHeading({ level: 1 }).run()
+                  }
+                >
+                  H1
+                </Button>
+                <Button
+                  size="sm"
+                  variant={
+                    editor.isActive("heading", { level: 2 })
+                      ? "default"
+                      : "outline"
+                  }
+                  onClick={() =>
+                    editor.chain().focus().toggleHeading({ level: 2 }).run()
+                  }
+                >
+                  H2
+                </Button>
+                <Button
+                  size="sm"
+                  variant={editor.isActive("bold") ? "default" : "outline"}
+                  onClick={() => editor.chain().focus().toggleBold().run()}
+                >
+                  太字
+                </Button>
+                <Button
+                  size="sm"
+                  variant={editor.isActive("italic") ? "default" : "outline"}
+                  onClick={() => editor.chain().focus().toggleItalic().run()}
+                >
+                  斜体
+                </Button>
+                <Button
+                  size="sm"
+                  variant={
+                    editor.isActive("bulletList") ? "default" : "outline"
+                  }
+                  onClick={() =>
+                    editor.chain().focus().toggleBulletList().run()
+                  }
+                >
+                  箇条書き
+                </Button>
+                <Button
+                  size="sm"
+                  variant={
+                    editor.isActive("orderedList") ? "default" : "outline"
+                  }
+                  onClick={() =>
+                    editor.chain().focus().toggleOrderedList().run()
+                  }
+                >
+                  番号付き
+                </Button>
+                <Button
+                  size="sm"
+                  variant={editor.isActive("link") ? "default" : "outline"}
+                  onClick={setLink}
+                >
+                  リンク
+                </Button>
+              </div>
+              <EditorContent editor={editor} />
             </Card>
           </TabsContent>
           <TabsContent value="preview">
             <Card className="p-4 prose">
-              {/* TODO: プレビュー実装 */}
               <div className="min-h-[400px]">{editor?.getHTML()}</div>
             </Card>
           </TabsContent>
