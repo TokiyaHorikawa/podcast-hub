@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import useUser from "@/hooks/useUser";
+import useClientFetchUser from "@/features/users/hooks/useClientFetchUser";
 import Link from "next/link";
 import { useState } from "react";
 import useSignInWithPassword from "../_hooks/useSignInWithPassword";
@@ -22,7 +22,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   // NOTE: ログインしているかどうかをチェック
-  useUser();
+  useClientFetchUser();
   const { signInWithPassword, error } = useSignInWithPassword();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {

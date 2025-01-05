@@ -2,6 +2,7 @@ export interface Content {
   id: bigint;
   title: string;
   body: string;
+  userId: number;
 }
 
 export interface Episode {

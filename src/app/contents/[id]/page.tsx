@@ -1,32 +1,23 @@
-import Article from "@/app/contents/_components/Article";
 import { generateMockEpisode } from "@/lib/mock";
+import { prisma } from "@/lib/prisma";
 import type { Content, User } from "@/lib/types";
-import { PrismaClient } from "@prisma/client";
 import type { Metadata } from "next";
+import Article from "./_components/Article";
 
 export const metadata: Metadata = {
   title: "コンテンツ詳細 - Podcast Hub",
   description: "Podcastに貢献できる場所",
 };
 
-const prisma: PrismaClient = new PrismaClient();
-
-const mockUser: User = {
-  id: 1,
-  name: "山田太郎",
-  uid: "user1",
-  email: "user1@example.com",
-  createdAt: new Date(),
-};
-
 const ContentDetail = async ({ params }: { params: { id: string } }) => {
-  const content = await getContent(params.id);
-  const author = mockUser;
+  const content = await fetchContent(params.id);
+  const author = await fetchUser(content.userId);
   const episode = generateMockEpisode(params.id);
+
   return <Article content={content} author={author} episode={episode} />;
 };
 
-async function getContent(id: string): Promise<Content> {
+async function fetchContent(id: string): Promise<Content> {
   const numberId = Number(id);
   const data = await prisma.content.findUnique({
     where: { id: numberId },
@@ -40,7 +31,20 @@ async function getContent(id: string): Promise<Content> {
     id: data.id,
     title: data.title,
     body: data.body,
+    userId: data.userId,
   };
+}
+
+async function fetchUser(id: number): Promise<User> {
+  const data = await prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!data) {
+    throw new Error("User not found");
+  }
+
+  return data;
 }
 
 export default ContentDetail;

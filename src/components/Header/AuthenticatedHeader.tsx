@@ -10,7 +10,7 @@ interface AuthenticatedHeaderProps {
 const AuthenticatedHeader = ({ user }: AuthenticatedHeaderProps) => {
   return (
     <div className="flex items-center space-x-4">
-      <Link href="/posts/new">
+      <Link href="/contents/new">
         <Button variant="default">投稿する</Button>
       </Link>
       <AvatorUser user={user} />
