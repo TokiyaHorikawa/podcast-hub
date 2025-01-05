@@ -4,7 +4,7 @@ import ContentBody from "./ContentBody";
 import ContentFooter from "./ContentFooter";
 import ContentHeader from "./ContentHeader";
 
-const Content = () => {
+const ContentCard = () => {
   return (
     <Card>
       <ContentHeader />
@@ -14,4 +14,4 @@ const Content = () => {
   );
 };
 
-export default Content;
+export default ContentCard;

@@ -1,8 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ContentStyledBody from "@/features/contents/ContentStyledBody";
 import type { Content } from "@/lib/types";
 import Link from "next/link";
 
 const ContentCard = ({ content }: { content: Content }) => {
+  const reducedBody = content.body.slice(0, 100);
+
   return (
     <Link href={`/contents/${content.id}`}>
       <Card key={String(content.id)}>
@@ -10,7 +13,7 @@ const ContentCard = ({ content }: { content: Content }) => {
           <CardTitle>{content.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="line-clamp-3">{content.body}</p>
+          <ContentStyledBody body={reducedBody} />
         </CardContent>
       </Card>
     </Link>

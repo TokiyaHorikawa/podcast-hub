@@ -1,5 +1,5 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Content from "@/features/contents/components/Content";
+import ContentCard from "@/features/contents/components/ContentCard";
 
 export default function Home() {
   return (
@@ -11,7 +11,7 @@ export default function Home() {
               // 一時的な仮コードのため、ignoreしている
               // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <div className="mb-4" key={index}>
-                <Content />
+                <ContentCard />
               </div>
             ))}
           </div>
