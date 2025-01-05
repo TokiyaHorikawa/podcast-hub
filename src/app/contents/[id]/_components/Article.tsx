@@ -43,7 +43,7 @@ const Article = ({
       </div>
       <Separator />
       <CardContent className="pt-6">
-        <ContentStyledBody content={content} />
+        <ContentStyledBody body={content.body} />
         <div className="mt-6 flex items-center">
           <LikeButton />
         </div>

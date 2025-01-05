@@ -11,7 +11,7 @@ const ContentCard = ({ content }: { content: Content }) => {
           <CardTitle>{content.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <ContentStyledBody content={content} />
+          <ContentStyledBody body={content.body} />
         </CardContent>
       </Card>
     </Link>

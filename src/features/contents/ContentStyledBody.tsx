@@ -1,8 +1,12 @@
 import type { Content } from "@/lib/types";
 import DOMPurify from "isomorphic-dompurify";
 
-const ContentStyledBody = ({ content }: { content: Content }) => {
-  const safeHTML = DOMPurify.sanitize(content.body);
+type Props = {
+  body: Content["body"];
+};
+
+const ContentStyledBody = ({ body }: Props) => {
+  const safeHTML = DOMPurify.sanitize(body);
 
   return (
     <div
