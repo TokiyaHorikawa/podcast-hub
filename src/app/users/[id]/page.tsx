@@ -1,5 +1,5 @@
+import { prisma } from "@/lib/prisma";
 import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
-import { createClient } from "@/lib/supabase/server";
 import type { Content } from "@/lib/types";
 import { getUser } from "./_api/getUser";
 import UserContents from "./_components/UserContents.ui";
@@ -12,11 +12,11 @@ interface Props {
 }
 
 async function getContents(id: string): Promise<Content[]> {
-  const supabase = createClient();
-  const { data: contents } = await supabase
-    .from("contents")
-    .select("*")
-    .eq("user_id", id);
+  const contents = await prisma.content.findMany({
+    where: {
+      userId: Number(id),
+    },
+  });
   return contents || [];
 }
 
