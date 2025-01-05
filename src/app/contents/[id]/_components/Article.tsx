@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import ContentStyledBody from "@/features/contents/ContentStyledBody";
 import AvatorUser from "@/features/users/AvatorUser";
 import type { Content, Episode, User } from "@/lib/types";
 import Link from "next/link";
@@ -42,7 +43,7 @@ const Article = ({
       </div>
       <Separator />
       <CardContent className="pt-6">
-        <div className="prose max-w-none">{content.body}</div>
+        <ContentStyledBody content={content} />
         <div className="mt-6 flex items-center">
           <LikeButton />
         </div>
