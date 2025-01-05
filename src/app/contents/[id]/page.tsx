@@ -1,8 +1,8 @@
-import Article from "@/app/contents/_components/Article";
 import { generateMockEpisode } from "@/lib/mock";
 import { prisma } from "@/lib/prisma";
 import type { Content, User } from "@/lib/types";
 import type { Metadata } from "next";
+import Article from "./_components/Article";
 
 export const metadata: Metadata = {
   title: "コンテンツ詳細 - Podcast Hub",
