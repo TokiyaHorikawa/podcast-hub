@@ -4,6 +4,8 @@ import type { Content } from "@/lib/types";
 import Link from "next/link";
 
 const ContentCard = ({ content }: { content: Content }) => {
+  const reducedBody = content.body.slice(0, 100);
+
   return (
     <Link href={`/contents/${content.id}`}>
       <Card key={String(content.id)}>
@@ -11,7 +13,7 @@ const ContentCard = ({ content }: { content: Content }) => {
           <CardTitle>{content.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <ContentStyledBody body={content.body} />
+          <ContentStyledBody body={reducedBody} />
         </CardContent>
       </Card>
     </Link>
