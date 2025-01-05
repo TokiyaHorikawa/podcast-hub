@@ -27,12 +27,7 @@ async function fetchContent(id: string): Promise<Content> {
     throw new Error("Content not found");
   }
 
-  return {
-    id: data.id,
-    title: data.title,
-    body: data.body,
-    userId: data.userId,
-  };
+  return data;
 }
 
 async function fetchUser(id: number): Promise<User> {
