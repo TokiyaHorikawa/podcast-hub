@@ -21,6 +21,7 @@ model User {
   createdAt DateTime @default(now())
 
   podcasts Podcast[]
+  contents  Content[]
 }
 
 model Podcast {
@@ -46,8 +47,9 @@ model Episode {
 
 model Content {
   id        BigInt      @id @default(autoincrement())
-  createdAt DateTime     @default(now())
+  createdAt DateTime    @default(now())
   title     String
   body      String
-  // 他のフィールドがあればここに追加
+  userId    Int
+  user      User        @relation(fields: [userId], references: [id])
 }

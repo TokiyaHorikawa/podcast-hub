@@ -4,9 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { User } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { createPost } from "../createPost";
 import RichEditor from "./RichEditor";
 
 const postSchema = z.object({
@@ -19,13 +22,19 @@ const postSchema = z.object({
 
 type FormValues = z.infer<typeof postSchema>;
 
-export default function NewPostForm() {
+type Props = {
+  user: User;
+};
+
+export default function NewPostForm({ user }: Props) {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(postSchema),
     defaultValues: {
@@ -34,9 +43,21 @@ export default function NewPostForm() {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    // TODO: 投稿処理の実装
+  const onSubmit = async (data: FormValues) => {
+    if (!user) return;
+
+    try {
+      const content = await createPost({
+        title: data.title,
+        body: data.content,
+        userId: user.id,
+      });
+
+      router.push(`/contents/${content.id}`);
+    } catch (error) {
+      console.error("投稿に失敗しました:", error);
+      // TODO: エラーハンドリングの実装
+    }
   };
 
   return (
@@ -68,10 +89,12 @@ export default function NewPostForm() {
       </div>
 
       <div className="flex justify-between">
-        <Button type="button" variant="outline">
+        <Button type="button" variant="outline" disabled={isSubmitting}>
           下書き保存
         </Button>
-        <Button type="submit">投稿する</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "投稿中..." : "投稿する"}
+        </Button>
       </div>
     </form>
   );

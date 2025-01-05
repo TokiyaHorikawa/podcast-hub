@@ -4,7 +4,7 @@ import { getUserFromClient } from "@/lib/supabase/getUserFromClient";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 
-export default function useUser() {
+export default function useClientFetchUser() {
   const router = useRouter();
   const {
     data: user,
