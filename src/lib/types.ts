@@ -1,15 +1,15 @@
-export interface Content {
-  id: bigint;
-  title: string;
-  body: string;
-  userId: number;
-}
+import type {
+  Content as PrismaContent,
+  Episode as PrismaEpisode,
+  User as PrismaUser,
+} from "@prisma/client";
 
-export interface Episode {
-  id: string;
-  title: string;
-  description: string;
-  imageUrl: string; // エピソードの画像は不要かも？
+export type Content = PrismaContent;
+export type User = PrismaUser;
+
+// Episodeは現在のスキーマと異なる追加フィールドがあるため、拡張して定義
+export interface Episode extends PrismaEpisode {
+  imageUrl: string;
   channel: Channel;
 }
 
@@ -18,12 +18,4 @@ export interface Channel {
   name: string;
   description: string;
   imageUrl: string;
-}
-
-export interface User {
-  id: number;
-  name: string;
-  uid: string;
-  email: string; // メールアドレスは自分のデータだけの時に取得で良さそう
-  createdAt: Date;
 }
