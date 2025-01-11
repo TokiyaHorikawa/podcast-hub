@@ -17,10 +17,12 @@ const Article = ({
   episode: Episode;
 }) => {
   return (
-    <Card className="max-w-[750px] mx-auto">
+    <Card className="w-full mx-auto min-w-[300px] md:max-w-[750px]">
       <CardHeader>
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-3xl font-bold">{content.title}</CardTitle>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+          <CardTitle className="text-2xl sm:text-3xl font-bold">
+            {content.title}
+          </CardTitle>
           <Badge variant="secondary">まとめ</Badge>
         </div>
         <div className="flex items-center space-x-4 mt-4">
