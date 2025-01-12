@@ -35,6 +35,19 @@ async function createSupabaseUser(email: string, password: string): Promise<any>
 
 async function main() {
   try {
+    // 管理者ユーザーの作成
+    const adminUser = await createSupabaseUser('admin@example.com', 'admin123')
+    if (!adminUser?.id) throw new Error('Failed to create admin user')
+
+    const admin = await _prisma.user.create({
+      data: {
+        uid: adminUser.id,
+        name: '管理者',
+        email: 'admin@example.com',
+        isAdmin: true,
+      },
+    })
+
     // テストユーザー1の作成
     const supabaseUser1 = await createSupabaseUser('yamada@example.com', 'password123')
     if (!supabaseUser1?.id) throw new Error('Failed to create Supabase user 1')
