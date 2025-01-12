@@ -1,22 +1,29 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import ContentCard from "@/features/contents/components/ContentCard";
+import { prisma } from "@/lib/prisma";
+import ContentCard from "./_components/ContentCard";
 
-export default function Home() {
+async function getContents() {
+  const contents = await prisma.content.findMany({
+    take: 10,
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      user: true,
+    },
+  });
+  return contents || [];
+}
+
+export default async function Home() {
+  const contents = await getContents();
+
   return (
-    <div className="flex flex-1">
-      <main className="flex-1 p-6">
-        <ScrollArea className="h-[calc(100vh-100px)]">
-          <div className="bg-card rounded-lg shadow p-4">
-            {Array.from({ length: 10 }, (_, index) => (
-              // 一時的な仮コードのため、ignoreしている
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              <div className="mb-4" key={index}>
-                <ContentCard />
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
-      </main>
-    </div>
+    <main className="container py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {contents.map((content) => (
+          <ContentCard key={content.id.toString()} content={content} />
+        ))}
+      </div>
+    </main>
   );
 }
