@@ -1,7 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { NextRequest } from "next/server";
 import { GET } from "./route";
 
 // Next.jsのcookiesをモック
@@ -31,12 +29,20 @@ jest.mock("@/lib/prisma", () => ({
 describe("check-admin API", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // consoleメソッドをモック化
+    jest.spyOn(console, "log").mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
     // Supabaseのモックの基本設定
     (createServerClient as jest.Mock).mockReturnValue({
       auth: {
         getSession: jest.fn(),
       },
     });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it("should return false when no session exists", async () => {
