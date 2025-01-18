@@ -38,6 +38,11 @@ const AuthenticatedHeader = ({ user }: AuthenticatedHeaderProps) => {
           <Link href={`/users/${user.id}`}>
             <DropdownMenuItem>プロフィール</DropdownMenuItem>
           </Link>
+          {user.isAdmin && (
+            <Link href="/admin">
+              <DropdownMenuItem>管理画面</DropdownMenuItem>
+            </Link>
+          )}
           <DropdownMenuItem onClick={handleSignOut}>
             ログアウト
           </DropdownMenuItem>
