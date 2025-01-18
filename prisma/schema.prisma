@@ -18,6 +18,7 @@ model User {
   uid       String   @unique // supabase authのid
   name      String
   email     String   @unique
+  isAdmin   Boolean  @default(false)
   createdAt DateTime @default(now())
 
   podcasts Podcast[]
