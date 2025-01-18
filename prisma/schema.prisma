@@ -22,35 +22,35 @@ model User {
   createdAt DateTime @default(now())
 
   podcasts Podcast[]
-  contents  Content[]
+  contents Content[]
 }
 
 model Podcast {
-  id        Int      @id @default(autoincrement())
-  title     String
+  id          Int      @id @default(autoincrement())
+  title       String
   description String
-  userId    Int
-  createdAt DateTime @default(now())
+  userId      Int
+  createdAt   DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id])
-  episodes  Episode[]
+  user     User      @relation(fields: [userId], references: [id])
+  episodes Episode[]
 }
 
 model Episode {
-  id        Int      @id @default(autoincrement())
-  title     String
+  id          Int      @id @default(autoincrement())
+  title       String
   description String
-  podcastId Int
-  createdAt DateTime @default(now())
+  podcastId   Int
+  createdAt   DateTime @default(now())
 
-  podcast   Podcast  @relation(fields: [podcastId], references: [id])
+  podcast Podcast @relation(fields: [podcastId], references: [id])
 }
 
 model Content {
-  id        BigInt      @id @default(autoincrement())
-  createdAt DateTime    @default(now())
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now())
   title     String
   body      String
   userId    Int
-  user      User        @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }

@@ -9,11 +9,17 @@
     "lint": "next lint",
     "check": "npx biome check",
     "tsc": "tsc --noEmit",
-    "prisma:seed": "ts-node prisma/seed.ts",
-    "reset-local": "./scripts/reset-local.sh",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "db:reset": "npx prisma migrate reset --force && supabase db reset && npx prisma db push --force-reset && npm run db:seed",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:new": "prisma migrate dev --create-only",
+    "db:status": "prisma migrate status",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
