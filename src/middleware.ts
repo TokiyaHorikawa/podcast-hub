@@ -2,88 +2,129 @@ import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
+type SupabaseCookieOptions = {
+  get(name: string): string | undefined;
+  set(name: string, value: string, options: CookieOptions): void;
+  remove(name: string, options: CookieOptions): void;
+};
+
+const createSupabaseClient = (
+  request: NextRequest,
+  response: NextResponse,
+  supabaseUrl: string,
+  supabaseKey: string,
+) => {
+  const cookieOptions: SupabaseCookieOptions = {
+    get(name: string) {
+      return request.cookies.get(name)?.value;
+    },
+    set(name: string, value: string, options: CookieOptions) {
+      response.cookies.set({ name, value, ...options });
+    },
+    remove(name: string, options: CookieOptions) {
+      response.cookies.delete({ name, ...options });
+    },
+  };
+
+  return createServerClient(supabaseUrl, supabaseKey, {
+    cookies: cookieOptions,
+  });
+};
+
+const createInitialResponse = (request: NextRequest): NextResponse => {
+  return NextResponse.next({
     request: {
       headers: request.headers,
     },
   });
+};
 
+const checkEnvironmentVariables = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
     console.error("Missing Supabase environment variables");
-    return response;
+    return null;
   }
 
-  // APIエンドポイントに対してはミドルウェアを実行しない
-  if (request.nextUrl.pathname.startsWith("/api/")) {
-    return response;
-  }
+  return { supabaseUrl, supabaseKey };
+};
 
-  const supabase = createServerClient(supabaseUrl, supabaseKey, {
-    cookies: {
-      get(name: string) {
-        return request.cookies.get(name)?.value;
-      },
-      set(name: string, value: string, options: CookieOptions) {
-        // Supabaseのクッキーを設定する際にレスポンスを更新
-        response = NextResponse.next({
-          request: {
-            headers: request.headers,
-          },
-        });
-        response.cookies.set({ name, value, ...options });
-      },
-      remove(name: string, options: CookieOptions) {
-        response = NextResponse.next({
-          request: {
-            headers: request.headers,
-          },
-        });
-        response.cookies.delete({ name, ...options });
+const isApiRoute = (pathname: string): boolean => {
+  return pathname.startsWith("/api/");
+};
+
+const isAdminRoute = (pathname: string): boolean => {
+  return pathname.startsWith("/admin");
+};
+
+const checkAdminAccess = async (request: NextRequest) => {
+  const adminCheckResponse = await fetch(
+    new URL("/api/auth/check-admin", request.url),
+    {
+      headers: {
+        Cookie: request.headers.get("cookie") || "",
       },
     },
-  });
+  );
 
+  if (!adminCheckResponse.ok) {
+    console.log(
+      "Middleware: Admin check failed with status:",
+      adminCheckResponse.status,
+    );
+    return false;
+  }
+
+  const { isAdmin } = await adminCheckResponse.json();
+  console.log("Middleware: Admin check result:", { isAdmin });
+  return isAdmin;
+};
+
+export async function middleware(request: NextRequest) {
+  // 環境変数のチェック
+  const env = checkEnvironmentVariables();
+  if (!env) {
+    return createInitialResponse(request);
+  }
+
+  // APIルートのスキップ
+  if (isApiRoute(request.nextUrl.pathname)) {
+    return createInitialResponse(request);
+  }
+
+  // レスポンスの初期化
+  const response = createInitialResponse(request);
+
+  // Supabaseクライアントの初期化
+  const supabase = createSupabaseClient(
+    request,
+    response,
+    env.supabaseUrl,
+    env.supabaseKey,
+  );
+
+  // セッションの取得
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  // 管理画面へのアクセスをチェック
-  if (request.nextUrl.pathname.startsWith("/admin")) {
+  // 管理者ルートのアクセス制御
+  if (isAdminRoute(request.nextUrl.pathname)) {
     console.log("Middleware: Checking admin access");
+
     if (!session) {
       console.log("Middleware: No session found, redirecting to /login");
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    console.log("Middleware: Session found, checking admin status");
-    // セッションのユーザーIDを使って直接DBをチェック
-    const adminCheckResponse = await fetch(
-      new URL("/api/auth/check-admin", request.url),
-      {
-        headers: {
-          Cookie: request.headers.get("cookie") || "",
-        },
-      },
-    );
-
-    if (!adminCheckResponse.ok) {
-      console.log(
-        "Middleware: Admin check failed with status:",
-        adminCheckResponse.status,
-      );
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-
-    const { isAdmin } = await adminCheckResponse.json();
-    console.log("Middleware: Admin check result:", { isAdmin });
+    const isAdmin = await checkAdminAccess(request);
     if (!isAdmin) {
       console.log("Middleware: User is not admin, redirecting to /");
       return NextResponse.redirect(new URL("/", request.url));
     }
+
     console.log("Middleware: Admin access granted");
   }
 

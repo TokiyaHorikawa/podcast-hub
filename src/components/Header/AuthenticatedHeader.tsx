@@ -35,7 +35,7 @@ const AuthenticatedHeader = ({ user }: AuthenticatedHeaderProps) => {
           <AvatorUser user={user} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <Link href="/profile">
+          <Link href={`/users/${user.id}`}>
             <DropdownMenuItem>プロフィール</DropdownMenuItem>
           </Link>
           <DropdownMenuItem onClick={handleSignOut}>
