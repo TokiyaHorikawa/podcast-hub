@@ -71,7 +71,10 @@ export async function middleware(request: NextRequest) {
     );
 
     if (!adminCheckResponse.ok) {
-      console.log("Middleware: Admin check failed with status:", adminCheckResponse.status);
+      console.log(
+        "Middleware: Admin check failed with status:",
+        adminCheckResponse.status,
+      );
       return NextResponse.redirect(new URL("/", request.url));
     }
 
