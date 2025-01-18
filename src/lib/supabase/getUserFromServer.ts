@@ -2,10 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import type { User } from "@/lib/types";
-import { createClient } from "./server";
+import { createServerSupabaseClient } from "./server";
 
 export async function getUserFromServer(): Promise<User | null> {
-  const supabase = createClient();
+  const supabase = createServerSupabaseClient();
 
   const {
     data: { user },

@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { createServerClient } from "@supabase/ssr";
-import { GET } from "./route";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 // Next.jsのcookiesをモック
 jest.mock("next/headers", () => ({
@@ -12,8 +11,8 @@ jest.mock("next/headers", () => ({
 }));
 
 // Supabaseのモック
-jest.mock("@supabase/ssr", () => ({
-  createServerClient: jest.fn(),
+jest.mock("@/lib/supabase/server", () => ({
+  createServerSupabaseClient: jest.fn(),
 }));
 
 // Prismaのモック
@@ -26,15 +25,16 @@ jest.mock("@/lib/prisma", () => ({
   },
 }));
 
+import { GET } from "./route";
+
 describe("check-admin API", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // consoleメソッドをモック化
-    jest.spyOn(console, "log").mockImplementation(() => {});
     jest.spyOn(console, "error").mockImplementation(() => {});
 
     // Supabaseのモックの基本設定
-    (createServerClient as jest.Mock).mockReturnValue({
+    (createServerSupabaseClient as jest.Mock).mockReturnValue({
       auth: {
         getSession: jest.fn(),
       },
@@ -47,7 +47,9 @@ describe("check-admin API", () => {
 
   it("should return false when no session exists", async () => {
     // Supabaseセッションがない場合のモック
-    (createServerClient as jest.Mock)().auth.getSession.mockResolvedValue({
+    (
+      createServerSupabaseClient as jest.Mock
+    )().auth.getSession.mockResolvedValue({
       data: { session: null },
       error: null,
     });
@@ -61,7 +63,9 @@ describe("check-admin API", () => {
 
   it("should return true for admin users", async () => {
     // 管理者ユーザーのセッションをモック
-    (createServerClient as jest.Mock)().auth.getSession.mockResolvedValue({
+    (
+      createServerSupabaseClient as jest.Mock
+    )().auth.getSession.mockResolvedValue({
       data: {
         session: {
           user: {
@@ -90,7 +94,9 @@ describe("check-admin API", () => {
 
   it("should create new user if not exists", async () => {
     // 新規ユーザーのセッションをモック
-    (createServerClient as jest.Mock)().auth.getSession.mockResolvedValue({
+    (
+      createServerSupabaseClient as jest.Mock
+    )().auth.getSession.mockResolvedValue({
       data: {
         session: {
           user: {
@@ -126,7 +132,9 @@ describe("check-admin API", () => {
 
   it("should handle Supabase errors", async () => {
     // Supabaseエラーをモック
-    (createServerClient as jest.Mock)().auth.getSession.mockResolvedValue({
+    (
+      createServerSupabaseClient as jest.Mock
+    )().auth.getSession.mockResolvedValue({
       data: { session: null },
       error: new Error("Supabase error"),
     });
