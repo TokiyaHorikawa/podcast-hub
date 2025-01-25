@@ -19,7 +19,7 @@ const ContentDetail = async ({ params }: { params: { id: string } }) => {
 
 async function fetchContent(id: string): Promise<Content> {
   const numberId = Number(id);
-  const data = await prisma.content.findUnique({
+  const data = await prisma.contents.findUnique({
     where: { id: numberId },
   });
 
@@ -31,7 +31,7 @@ async function fetchContent(id: string): Promise<Content> {
 }
 
 async function fetchUser(id: number): Promise<User> {
-  const data = await prisma.user.findUnique({
+  const data = await prisma.users.findUnique({
     where: { id },
   });
 

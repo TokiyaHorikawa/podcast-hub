@@ -9,7 +9,7 @@ export type CreateContentInput = {
 };
 
 export const createPost = async (input: CreateContentInput) => {
-  const post = await prisma.content.create({
+  const post = await prisma.contents.create({
     data: {
       title: input.title,
       body: input.body,

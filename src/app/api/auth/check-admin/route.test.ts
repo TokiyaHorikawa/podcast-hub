@@ -18,7 +18,7 @@ jest.mock("@/lib/supabase/server", () => ({
 // Prismaのモック
 jest.mock("@/lib/prisma", () => ({
   prisma: {
-    user: {
+    users: {
       findUnique: jest.fn(),
       create: jest.fn(),
     },
@@ -78,7 +78,7 @@ describe("check-admin API", () => {
     });
 
     // Prismaの応答をモック
-    (prisma.user.findUnique as jest.Mock).mockResolvedValue({
+    (prisma.users.findUnique as jest.Mock).mockResolvedValue({
       isAdmin: true,
     });
 
@@ -86,7 +86,7 @@ describe("check-admin API", () => {
     const data = await response.json();
 
     expect(data).toEqual({ isAdmin: true });
-    expect(prisma.user.findUnique).toHaveBeenCalledWith({
+    expect(prisma.users.findUnique).toHaveBeenCalledWith({
       where: { uid: "test-user-id" },
       select: { isAdmin: true },
     });
@@ -109,9 +109,9 @@ describe("check-admin API", () => {
     });
 
     // ユーザーが存在しない場合
-    (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+    (prisma.users.findUnique as jest.Mock).mockResolvedValue(null);
     // 新規ユーザー作成
-    (prisma.user.create as jest.Mock).mockResolvedValue({
+    (prisma.users.create as jest.Mock).mockResolvedValue({
       isAdmin: false,
     });
 
@@ -119,7 +119,7 @@ describe("check-admin API", () => {
     const data = await response.json();
 
     expect(data).toEqual({ isAdmin: false });
-    expect(prisma.user.create).toHaveBeenCalledWith({
+    expect(prisma.users.create).toHaveBeenCalledWith({
       data: {
         uid: "new-user-id",
         email: "new@example.com",

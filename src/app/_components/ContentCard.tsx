@@ -1,12 +1,15 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import type { Content, User } from "@prisma/client";
+import type {
+  contents as ContentsType,
+  users as UsersType,
+} from "@prisma/client";
 import { Heart } from "lucide-react";
 import Link from "next/link";
 
 type ContentCardProps = {
-  content: Content & {
-    user: User;
+  content: ContentsType & {
+    user: UsersType;
   };
 };
 

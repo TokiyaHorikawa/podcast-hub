@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import ContentCard from "./_components/ContentCard";
 
 async function getContents() {
-  const contents = await prisma.content.findMany({
+  const contents = await prisma.contents.findMany({
     take: 10,
     orderBy: {
       createdAt: "desc",

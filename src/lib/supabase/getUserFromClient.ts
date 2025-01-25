@@ -15,7 +15,7 @@ export async function getUserFromClient() {
     return null;
   }
 
-  const dbUser = await prisma.user.findFirst({
+  const dbUser = await prisma.users.findFirst({
     where: { email: user.email },
   });
 

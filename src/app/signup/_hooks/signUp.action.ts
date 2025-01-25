@@ -23,7 +23,7 @@ async function createUser(
 ): Promise<void> {
   const prisma: PrismaClient = new PrismaClient();
   try {
-    await prisma.user.create({
+    await prisma.users.create({
       data: { uid: userId, name: username, email },
     });
   } catch (error) {

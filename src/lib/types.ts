@@ -1,7 +1,7 @@
 import type {
-  Content as PrismaContent,
-  Episode as PrismaEpisode,
-  User as PrismaUser,
+  contents as PrismaContent,
+  episodes as PrismaEpisode,
+  users as PrismaUser,
 } from "@prisma/client";
 
 export type Content = PrismaContent;

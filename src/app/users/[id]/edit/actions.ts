@@ -31,7 +31,7 @@ export async function updateUser(userId: string, formData: FormData) {
     throw new Error(validationResult.error.errors[0].message);
   }
 
-  const updatedUser = await prisma.user.update({
+  const updatedUser = await prisma.users.update({
     where: {
       id: Number(userId),
     },
