@@ -28,7 +28,10 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npx prisma generate
+          npm install --save-dev @types/node @types/react @types/react-dom @types/jest
 
   lint-biome:
     runs-on: ubuntu-latest
