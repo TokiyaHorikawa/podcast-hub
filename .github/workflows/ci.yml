@@ -30,3 +30,6 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
+
+      - name: Run Jest
+        run: npm run test
