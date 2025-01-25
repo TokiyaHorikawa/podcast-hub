@@ -12,7 +12,7 @@ interface Props {
 }
 
 async function getContents(id: string): Promise<Content[]> {
-  const contents = await prisma.content.findMany({
+  const contents = await prisma.contents.findMany({
     where: {
       userId: Number(id),
     },

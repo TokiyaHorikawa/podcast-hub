@@ -4,9 +4,9 @@ import Link from "next/link";
 
 async function getStats() {
   const [userCount, podcastCount, contentCount] = await Promise.all([
-    prisma.user.count(),
-    prisma.podcast.count(),
-    prisma.content.count(),
+    prisma.users.count(),
+    prisma.podcasts.count(),
+    prisma.contents.count(),
   ]);
 
   return {
