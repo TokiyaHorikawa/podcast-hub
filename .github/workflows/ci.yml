@@ -55,10 +55,22 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Restore node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify @types/node
+        run: ls -la node_modules/@types/node
 
       - name: Run TypeScript
         run: npm run tsc
