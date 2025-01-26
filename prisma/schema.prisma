@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model Users {
   id        Int      @id @default(autoincrement())
   uid       String   @unique // supabase authのid
   name      String
@@ -21,36 +21,45 @@ model users {
   isAdmin   Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  podcasts podcasts[]
-  contents contents[]
+  podcasts Podcasts[]
+  contents Contents[]
+
+  @@map("users")
 }
 
-model podcasts {
+model Podcasts {
   id          Int      @id @default(autoincrement())
   title       String
   description String
   userId      Int
   createdAt   DateTime @default(now())
 
-  user     users      @relation(fields: [userId], references: [id])
-  episodes episodes[]
+  user     Users      @relation(fields: [userId], references: [id])
+  episodes Episodes[]
+
+  @@map("podcasts")
 }
 
-model episodes {
+model Episodes {
   id          Int      @id @default(autoincrement())
   title       String
   description String
   podcastId   Int
   createdAt   DateTime @default(now())
 
-  podcast podcasts @relation(fields: [podcastId], references: [id])
+  podcast Podcasts @relation(fields: [podcastId], references: [id])
+
+  @@map("episodes")
 }
 
-model contents {
+model Contents {
   id        BigInt   @id @default(autoincrement())
   createdAt DateTime @default(now())
   title     String
   body      String
   userId    Int
-  user      users    @relation(fields: [userId], references: [id])
+
+  user Users @relation(fields: [userId], references: [id])
+
+  @@map("contents")
 }

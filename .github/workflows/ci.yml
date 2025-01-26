@@ -9,19 +9,8 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.cache.outputs.cache-hit }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: cache
-        with:
-          path: |
-            node_modules
-            .next/cache
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,10 +19,11 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          npm ci --include=dev
+          npm ci
           npx prisma generate
+        env:
+          PRISMA_CLI_QUERY_ENGINE_TYPE: library
 
   lint-biome:
     runs-on: ubuntu-latest
@@ -69,7 +59,9 @@ jobs:
           path: |
             node_modules
             .next/cache
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', 'prisma/schema.prisma') }}
+
+      - run: npx prisma generate
 
       - uses: actions/setup-node@v4
         with:
