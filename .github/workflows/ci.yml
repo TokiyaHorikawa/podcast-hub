@@ -59,9 +59,12 @@ jobs:
           path: |
             node_modules
             .next/cache
+            .prisma/client
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', 'prisma/schema.prisma') }}
 
       - run: npx prisma generate
+        env:
+          PRISMA_CLI_QUERY_ENGINE_TYPE: library
 
       - uses: actions/setup-node@v4
         with:
@@ -69,7 +72,7 @@ jobs:
           cache: "npm"
 
       - name: Run TypeScript
-        run: npm run tsc
+        run: npm run tsc -- --incremental --tsBuildInfoFile .tsbuildinfo
 
   eslint:
     runs-on: ubuntu-latest
