@@ -32,8 +32,18 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          npm ci --include=dev
+          npm ci
           npx prisma generate
+        env:
+          PRISMA_CLI_QUERY_ENGINE_TYPE: library
+
+      - name: Cache Prisma Client
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules/.prisma
+            node_modules/@prisma
+          key: ${{ runner.os }}-prisma-${{ hashFiles('prisma/schema.prisma') }}
 
   lint-biome:
     runs-on: ubuntu-latest
