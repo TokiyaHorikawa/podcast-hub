@@ -14,15 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: cache
-        with:
-          path: |
-            node_modules
-            .next/cache
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,7 +21,6 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm ci
           npx prisma generate
