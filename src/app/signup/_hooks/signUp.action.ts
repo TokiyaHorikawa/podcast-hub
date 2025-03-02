@@ -1,13 +1,20 @@
 "use server";
-import supabase from "@/lib/supabase/supabase";
-import { PrismaClient } from "@prisma/client";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { SignUpParams } from "./useSignUpWithPassword";
 
 async function signUpAuth(
   email: SignUpParams["email"],
   password: SignUpParams["password"],
 ): Promise<{ userId: string | undefined }> {
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`,
+    },
+  });
+
   if (error) {
     console.error("Supabase signUp error:", error);
     throw new Error("認証に失敗しました");
@@ -21,31 +28,28 @@ async function createUser(
   username: SignUpParams["username"],
   email: SignUpParams["email"],
 ): Promise<void> {
-  const prisma: PrismaClient = new PrismaClient();
+  const supabase = createServerSupabaseClient();
   try {
-    await prisma.users.create({
-      data: { uid: userId, name: username, email },
+    const { error } = await supabase.from("users").insert({
+      uid: userId,
+      name: username,
+      email,
     });
+
+    if (error) {
+      console.error("Supabase createUser error:", error);
+      throw new Error("ユーザーの作成に失敗しました");
+    }
   } catch (error) {
-    console.error("Prisma createUser error:", error);
+    console.error("Supabase createUser error:", error);
     throw new Error("ユーザーの作成に失敗しました");
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
-export async function signUp({ email, password, username }: SignUpParams) {
-  try {
-    const { userId } = await signUpAuth(email, password);
-    if (!userId) throw new Error("ユーザーIDが取得できませんでした。");
-
-    await createUser(userId, username, email);
-    return true;
-  } catch (error) {
-    console.error("signUp error:", error);
-    if (!(error instanceof Error))
-      throw new Error("ユーザー登録に失敗しました");
-
-    throw new Error(error.message || "ユーザー登録に失敗しました");
+export async function signUp(params: SignUpParams): Promise<void> {
+  const { userId } = await signUpAuth(params.email, params.password);
+  if (!userId) {
+    throw new Error("ユーザーIDの取得に失敗しました");
   }
+  await createUser(userId, params.username, params.email);
 }

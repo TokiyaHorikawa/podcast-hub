@@ -1,10 +1,9 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
-import type { User } from "@/lib/types";
+import type { Users } from "@/types";
 import { createServerSupabaseClient } from "./server";
 
-export async function getUserFromServer(): Promise<User | null> {
+export async function getUserFromServer(): Promise<Users | null> {
   const supabase = createServerSupabaseClient();
 
   const {
@@ -12,13 +11,20 @@ export async function getUserFromServer(): Promise<User | null> {
     error,
   } = await supabase.auth.getUser();
 
-  if (error || !user) {
+  if (error || !user || !user.email) {
     return null;
   }
 
-  const dbUser = await prisma.users.findFirst({
-    where: { email: user.email },
-  });
+  // Prismaの代わりにSupabaseを使用
+  const { data: dbUser, error: dbError } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", user.email)
+    .single();
+
+  if (dbError || !dbUser) {
+    return null;
+  }
 
   return dbUser;
 }

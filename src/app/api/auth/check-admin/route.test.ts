@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 // Next.jsのcookiesをモック
@@ -15,16 +14,6 @@ jest.mock("@/lib/supabase/server", () => ({
   createServerSupabaseClient: jest.fn(),
 }));
 
-// Prismaのモック
-jest.mock("@/lib/prisma", () => ({
-  prisma: {
-    users: {
-      findUnique: jest.fn(),
-      create: jest.fn(),
-    },
-  },
-}));
-
 import { GET } from "./route";
 
 describe("check-admin API", () => {
@@ -38,6 +27,11 @@ describe("check-admin API", () => {
       auth: {
         getSession: jest.fn(),
       },
+      from: jest.fn().mockReturnThis(),
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn(),
+      insert: jest.fn().mockReturnThis(),
     });
   });
 
@@ -77,19 +71,26 @@ describe("check-admin API", () => {
       error: null,
     });
 
-    // Prismaの応答をモック
-    (prisma.users.findUnique as jest.Mock).mockResolvedValue({
-      isAdmin: true,
-    });
+    // Supabaseの応答をモック
+    (createServerSupabaseClient as jest.Mock)()
+      .from()
+      .select()
+      .eq()
+      .single.mockResolvedValue({
+        data: { isAdmin: true },
+        error: null,
+      });
 
     const response = await GET();
     const data = await response.json();
 
     expect(data).toEqual({ isAdmin: true });
-    expect(prisma.users.findUnique).toHaveBeenCalledWith({
-      where: { uid: "test-user-id" },
-      select: { isAdmin: true },
-    });
+    expect(createServerSupabaseClient().from).toHaveBeenCalledWith("users");
+    expect(createServerSupabaseClient().select).toHaveBeenCalledWith("isAdmin");
+    expect(createServerSupabaseClient().eq).toHaveBeenCalledWith(
+      "uid",
+      "test-user-id",
+    );
   });
 
   it("should create new user if not exists", async () => {
@@ -109,24 +110,35 @@ describe("check-admin API", () => {
     });
 
     // ユーザーが存在しない場合
-    (prisma.users.findUnique as jest.Mock).mockResolvedValue(null);
+    (createServerSupabaseClient as jest.Mock)()
+      .from()
+      .select()
+      .eq()
+      .single.mockResolvedValue({
+        data: null,
+        error: { code: "PGRST116" },
+      });
+
     // 新規ユーザー作成
-    (prisma.users.create as jest.Mock).mockResolvedValue({
-      isAdmin: false,
-    });
+    (createServerSupabaseClient as jest.Mock)()
+      .from()
+      .insert()
+      .select()
+      .single.mockResolvedValue({
+        data: { isAdmin: false },
+        error: null,
+      });
 
     const response = await GET();
     const data = await response.json();
 
     expect(data).toEqual({ isAdmin: false });
-    expect(prisma.users.create).toHaveBeenCalledWith({
-      data: {
-        uid: "new-user-id",
-        email: "new@example.com",
-        name: "new",
-        isAdmin: false,
-      },
-      select: { isAdmin: true },
+    expect(createServerSupabaseClient().from).toHaveBeenCalledWith("users");
+    expect(createServerSupabaseClient().insert).toHaveBeenCalledWith({
+      uid: "new-user-id",
+      email: "new@example.com",
+      name: "new",
+      isAdmin: false,
     });
   });
 

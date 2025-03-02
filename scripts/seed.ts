@@ -1,8 +1,4 @@
 const { createClient } = require('@supabase/supabase-js')
-const { PrismaClient } = require('@prisma/client')
-
-// Prismaクライアントは型参照のみに使用
-const _prisma = new PrismaClient()
 
 // Supabaseクライアントの初期化
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -19,7 +15,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
   },
 })
 
-async function createSupabaseUser(email: string, password: string): Promise<any> {
+async function createSupabaseUser(email, password) {
   const { data, error } = await supabase.auth.admin.createUser({
     email,
     password,
@@ -180,7 +176,4 @@ main()
   .catch((e) => {
     console.error(e)
     process.exit(1)
-  })
-  .finally(async () => {
-    await _prisma.$disconnect()
   })
