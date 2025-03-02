@@ -13,6 +13,7 @@ import type {
   usersRowSchema,
 } from "./zod-schemas";
 
+// TODO: 複数形なのに単体なのにややこしいので修正する
 // Prismaの型と同じ名前で型を提供
 export type Users = z.infer<typeof usersRowSchema>;
 export type Contents = z.infer<typeof contentsRowSchema>;

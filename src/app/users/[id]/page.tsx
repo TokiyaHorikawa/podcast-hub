@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
-import type { Content } from "@/lib/types";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import type { Contents } from "@/types";
 import { getUser } from "./_api/getUser";
 import UserContents from "./_components/UserContents.ui";
 import UserProfile from "./_components/UserProfile.ui";
@@ -11,13 +11,18 @@ interface Props {
   };
 }
 
-async function getContents(id: string): Promise<Content[]> {
-  const contents = await prisma.contents.findMany({
-    where: {
-      userId: Number(id),
-    },
-  });
-  return contents || [];
+async function getContents(userId: string): Promise<Contents[]> {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("contents")
+    .select("*")
+    .eq("userId", Number(userId));
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data || [];
 }
 
 const UserPage = async ({ params }: Props) => {
