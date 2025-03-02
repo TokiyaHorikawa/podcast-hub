@@ -1,22 +1,39 @@
-import { prisma } from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { User } from "@supabase/supabase-js";
 
 export async function findOrCreateUser(supabaseUser: User) {
-  let user = await prisma.users.findUnique({
-    where: { uid: supabaseUser.id },
-    select: { isAdmin: true },
-  });
+  const supabase = createServerSupabaseClient();
+
+  // Supabaseを使用してユーザーを検索
+  const { data: user, error } = await supabase
+    .from("users")
+    .select("isAdmin")
+    .eq("uid", supabaseUser.id)
+    .single();
+
+  if (error && error.code !== "PGRST116") {
+    // PGRST116はレコードが見つからないエラー
+    throw error;
+  }
 
   if (!user) {
-    user = await prisma.users.create({
-      data: {
+    // ユーザーが存在しない場合は作成
+    const { data: newUser, error: insertError } = await supabase
+      .from("users")
+      .insert({
         uid: supabaseUser.id,
         email: supabaseUser.email || "",
         name: supabaseUser.email?.split("@")[0] || "Unknown",
         isAdmin: false,
-      },
-      select: { isAdmin: true },
-    });
+      })
+      .select("isAdmin")
+      .single();
+
+    if (insertError) {
+      throw insertError;
+    }
+
+    return newUser;
   }
 
   return user;

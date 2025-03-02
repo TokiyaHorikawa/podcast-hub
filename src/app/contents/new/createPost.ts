@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export type CreateContentInput = {
   title: string;
@@ -9,13 +10,21 @@ export type CreateContentInput = {
 };
 
 export const createPost = async (input: CreateContentInput) => {
-  const post = await prisma.contents.create({
-    data: {
+  const supabase = createServerSupabaseClient();
+
+  const { data: post, error } = await supabase
+    .from("contents")
+    .insert({
       title: input.title,
       body: input.body,
       userId: input.userId,
-    },
-  });
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw error;
+  }
 
   return post;
 };

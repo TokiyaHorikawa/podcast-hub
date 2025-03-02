@@ -1,8 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// このスキーマファイルは型生成のみに使用します。
+// マイグレーションはSupabaseで管理します。
 
 generator client {
   provider = "prisma-client-js"
@@ -12,6 +12,9 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// 以下のモデル定義はSupabaseのスキーマと同期するために使用します
+// モデルの変更はSupabaseのマイグレーションで行い、その後 prisma db pull で反映します
 
 model Users {
   id        Int      @id @default(autoincrement())

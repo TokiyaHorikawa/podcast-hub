@@ -134,6 +134,67 @@ const { data: user, error } = await supabase
 
 ---
 
+## ✅ **実装計画（詳細）**
+
+### **1. package.jsonのスクリプト更新**
+現在のスクリプトを以下のように更新する：
+
+```json
+{
+  "scripts": {
+    "db:reset": "supabase db reset && npx prisma db pull && npx prisma generate && npm run db:seed",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:pull": "prisma db pull",
+    "db:generate": "prisma generate",
+    "db:migration:new": "supabase migration new",
+    "db:migration:push": "supabase db push",
+    "db:migrate": "echo 'This command is deprecated. Use db:migration:push instead.'",
+    "db:migrate:dev": "echo 'This command is deprecated. Use db:migration:new and db:migration:push instead.'",
+    "db:new": "echo 'This command is deprecated. Use db:migration:new instead.'",
+    "db:status": "supabase migration list",
+    "db:studio": "prisma studio"
+  }
+}
+```
+
+### **2. Prismaスキーマの更新**
+`schema.prisma`ファイルを更新して、型生成のみに使用するように変更する：
+
+```prisma
+// このスキーマファイルは型生成のみに使用します。
+// マイグレーションはSupabaseで管理します。
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 以下のモデル定義はSupabaseのスキーマと同期するために使用します
+// モデルの変更はSupabaseのマイグレーションで行い、その後 prisma db pull で反映します
+```
+
+### **3. シードスクリプトの更新**
+`prisma/seed.ts`を更新して、Prismaの代わりにSupabaseクライアントを使用するように変更する。
+
+### **4. アプリケーションコードの更新**
+以下のファイルを中心に、Prismaクライアントの使用箇所をSupabaseクライアントに置き換える：
+
+- `src/lib/services/user.service.ts`
+- `src/app/contents/new/createPost.ts`
+
+### **5. 移行テスト**
+1. 開発環境でDBをリセットして、新しい方式でマイグレーションとシードが正常に動作するか確認
+2. アプリケーションの各機能が正常に動作するか確認
+
+### **6. ドキュメント更新**
+開発者向けのドキュメントを更新して、新しいDB管理方法を説明する。
+
+---
+
 ## ✅ **運用方針**
 1. **MigrationはSupabaseのみを利用**
    - PrismaのMigration (`prisma migrate dev`) は今後使用しない
@@ -152,11 +213,113 @@ const { data: user, error } = await supabase
 ---
 
 ## ✅ **完了の定義 (Definition of Done)**
-- [ ] PrismaのMigrationが完全に停止され、SupabaseのMigrationに統一された
-- [ ] SupabaseのMigrationでスキーマ管理が行えるようになった
-- [ ] Prismaの型生成 (`prisma generate`) は継続して利用できる
+- [x] PrismaのMigrationが完全に停止され、SupabaseのMigrationに統一された
+- [x] SupabaseのMigrationでスキーマ管理が行えるようになった
+- [x] Prismaの型生成 (`prisma generate`) は継続して利用できる
+- [x] 主要なデータアクセスが `supabase-js` に移行された
 - [ ] すべてのデータアクセスが `supabase-js` に移行された
 - [ ] チームメンバーが新しいMigrationフローを理解し、適用できる状態になった
+
+---
+
+## ✅ **実装結果**
+
+### **1. package.jsonのスクリプト更新**
+以下のようにスクリプトを更新しました：
+
+```json
+{
+  "scripts": {
+    "db:reset": "supabase db reset && npx prisma db pull && npx prisma generate && npm run db:seed",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:pull": "prisma db pull",
+    "db:generate": "prisma generate",
+    "db:migration:new": "supabase migration new",
+    "db:migration:push": "supabase db push",
+    "db:migrate": "echo 'This command is deprecated. Use db:migration:push instead.'",
+    "db:migrate:dev": "echo 'This command is deprecated. Use db:migration:new and db:migration:push instead.'",
+    "db:new": "echo 'This command is deprecated. Use db:migration:new instead.'",
+    "db:status": "supabase migration list",
+    "db:studio": "prisma studio"
+  }
+}
+```
+
+### **2. Prismaスキーマの更新**
+`schema.prisma`ファイルを更新して、型生成のみに使用するように変更しました：
+
+```prisma
+// このスキーマファイルは型生成のみに使用します。
+// マイグレーションはSupabaseで管理します。
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 以下のモデル定義はSupabaseのスキーマと同期するために使用します
+// モデルの変更はSupabaseのマイグレーションで行い、その後 prisma db pull で反映します
+```
+
+### **3. シードスクリプトの更新**
+`prisma/seed.ts`を更新して、Prismaの代わりにSupabaseクライアントを使用するように変更しました。
+
+### **4. アプリケーションコードの更新**
+以下のファイルを更新して、Prismaの代わりにSupabaseクライアントを使用するように変更しました：
+
+- `src/lib/services/user.service.ts`
+- `src/app/contents/new/createPost.ts`
+
+### **5. 今後の作業**
+- 残りのPrismaクライアント使用箇所をSupabaseクライアントに置き換える
+- チームメンバーに新しいDB管理方法を説明するドキュメントを作成する
+
+---
+
+## ✅ **新しいDB管理フロー**
+
+### **1. スキーマ変更の流れ**
+1. Supabaseのマイグレーションファイルを作成
+   ```sh
+   npm run db:migration:new <migration_name>
+   ```
+
+2. 生成されたSQLファイルを編集
+
+3. マイグレーションを適用
+   ```sh
+   npm run db:migration:push
+   ```
+
+4. Prismaの型を更新
+   ```sh
+   npm run db:pull
+   npm run db:generate
+   ```
+
+### **2. 開発環境のリセット**
+```sh
+npm run db:reset
+```
+
+### **3. 型の利用方法**
+Prismaで生成された型は引き続き使用できます：
+
+```ts
+import type { Users, Contents } from "@prisma/client";
+```
+
+---
+
+## ✅ **注意点**
+- Prismaクライアントは型参照のみに使用し、データアクセスには使用しないでください
+- スキーマ変更は必ずSupabaseのマイグレーションで行ってください
+- Supabase Studioでの直接的なスキーマ変更は避け、必ずマイグレーションファイルを作成してください
+- RLSの設定はSupabaseのマイグレーションファイルに記述してください
 
 ---
 
