@@ -19,11 +19,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: |
-          npm ci
-          npx prisma generate
-        env:
-          PRISMA_CLI_QUERY_ENGINE_TYPE: library
+        run: npm ci
 
   lint-biome:
     runs-on: ubuntu-latest
@@ -59,12 +55,7 @@ jobs:
           path: |
             node_modules
             .next/cache
-            .prisma/client
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', 'prisma/schema.prisma') }}
-
-      - run: npx prisma generate
-        env:
-          PRISMA_CLI_QUERY_ENGINE_TYPE: library
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
       - uses: actions/setup-node@v4
         with:
