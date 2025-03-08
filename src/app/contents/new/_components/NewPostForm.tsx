@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUser } from "@/contexts/UserContext";
 import type { User } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -28,9 +27,8 @@ type Props = {
   user: User;
 };
 
-export default function NewPostForm() {
+export default function NewPostForm({ user }: Props) {
   const router = useRouter();
-  const { user } = useUser();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<FormValues>({

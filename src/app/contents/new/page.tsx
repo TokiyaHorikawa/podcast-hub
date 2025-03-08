@@ -9,19 +9,23 @@ export const metadata: Metadata = {
 };
 
 export default async function NewPostPage() {
-  const supabase = createServerSupabaseClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const user = await getLoginUser();
 
-  if (!session) {
+  if (!user) {
     redirect("/login");
   }
 
   return (
     <div className="container max-w-4xl py-6">
       <h1 className="text-2xl font-bold mb-6">新規投稿</h1>
-      <NewPostForm />
+      <NewPostForm user={user} />
     </div>
   );
+}
+
+import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
+
+async function getLoginUser() {
+  const user = await getUserFromServer();
+  return user;
 }
