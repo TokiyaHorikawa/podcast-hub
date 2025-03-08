@@ -1,5 +1,5 @@
-import { generateMockChannel } from "@/lib/mock";
-import type { Channel } from "@/lib/types";
+import { mockPodcast } from "@/lib/mock";
+import type { Podcast } from "@/lib/types";
 import type { Metadata } from "next";
 import ChannelDetail from "./_components/ChannelDetail";
 
@@ -8,13 +8,15 @@ export const metadata: Metadata = {
   description: "Podcastに貢献できる場所",
 };
 
-const ChannelPage = ({ params }: { params: { id: string } }) => {
-  const channel: Channel = getChannel(params.id);
-  return <ChannelDetail channel={channel} />;
+type Props = {
+  params: {
+    id: string;
+  };
 };
 
-function getChannel(id: string): Channel {
-  return generateMockChannel(id);
-}
+export default function PodcastPage({ params }: Props) {
+  // TODO: 実際のデータ取得に置き換える
+  const podcast: Podcast = mockPodcast;
 
-export default ChannelPage;
+  return <ChannelDetail podcast={podcast} />;
+}

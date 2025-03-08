@@ -1,37 +1,21 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import type { Channel } from "@/lib/types";
-import Image from "next/image";
+import type { Podcast } from "@/lib/types";
 
-interface ChannelDetailsProps {
-  channel: Channel;
-}
-
-const ChannelDetail: React.FC<ChannelDetailsProps> = ({ channel }) => {
-  return (
-    <Card className="max-w-[750px] mx-auto">
-      <CardHeader>
-        <div className="flex items-center space-x-4">
-          <Image
-            src={channel.imageUrl}
-            alt={channel.name}
-            width={100}
-            height={100}
-            className="rounded-full"
-          />
-          <CardTitle>{channel.name}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <CardDescription>{channel.description}</CardDescription>
-      </CardContent>
-    </Card>
-  );
+type PodcastDetailProps = {
+  podcast: Podcast;
 };
 
-export default ChannelDetail;
+export default function PodcastDetail({ podcast }: PodcastDetailProps) {
+  return (
+    <div className="space-y-4">
+      <div>
+        <h1 className="text-2xl font-bold">{podcast.title}</h1>
+        <p className="text-gray-600">{podcast.description}</p>
+      </div>
+      <div>
+        <span className="text-sm text-gray-600">
+          {new Date(podcast.created_at).toLocaleDateString()}
+        </span>
+      </div>
+    </div>
+  );
+}

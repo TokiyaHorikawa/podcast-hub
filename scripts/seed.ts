@@ -15,7 +15,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
   },
 })
 
-async function createSupabaseUser(email, password) {
+const createUser = async (email: string, password: string) => {
   const { data, error } = await supabase.auth.admin.createUser({
     email,
     password,
@@ -33,7 +33,7 @@ async function createSupabaseUser(email, password) {
 async function main() {
   try {
     // 管理者ユーザーの作成
-    const adminUser = await createSupabaseUser('admin@example.com', 'admin123')
+    const adminUser = await createUser('admin@example.com', 'admin123')
     if (!adminUser?.id) throw new Error('Failed to create admin user')
 
     // Supabaseを使用してユーザーデータを作成
@@ -51,7 +51,7 @@ async function main() {
     if (adminError) throw adminError
 
     // テストユーザー1の作成
-    const supabaseUser1 = await createSupabaseUser('yamada@example.com', 'password123')
+    const supabaseUser1 = await createUser('yamada@example.com', 'password123')
     if (!supabaseUser1?.id) throw new Error('Failed to create Supabase user 1')
 
     const { data: user1, error: user1Error } = await supabase
@@ -67,7 +67,7 @@ async function main() {
     if (user1Error) throw user1Error
 
     // テストユーザー2の作成
-    const supabaseUser2 = await createSupabaseUser('sato@example.com', 'password123')
+    const supabaseUser2 = await createUser('sato@example.com', 'password123')
     if (!supabaseUser2?.id) throw new Error('Failed to create Supabase user 2')
 
     const { data: user2, error: user2Error } = await supabase

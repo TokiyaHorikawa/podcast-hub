@@ -1,12 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import type { Episode } from "@/lib/types";
+import type { Episode, Podcast } from "@/lib/types";
 import React from "react";
 import EpisodeParentChannel from "./EpisodeParentChanel";
 
-interface EpisodeDetailProps {
-  episode: Episode;
-}
+type EpisodeDetailProps = {
+  episode: Episode & {
+    podcast: Podcast;
+  };
+};
 
 const EpisodeDetail: React.FC<EpisodeDetailProps> = ({ episode }) => {
   return (
@@ -22,7 +24,7 @@ const EpisodeDetail: React.FC<EpisodeDetailProps> = ({ episode }) => {
             </p>
           </div>
         </div>
-        <EpisodeParentChannel channel={episode.channel} />
+        <EpisodeParentChannel podcast={episode.podcast} />
       </CardHeader>
       <Separator />
       <CardContent className="pt-6">

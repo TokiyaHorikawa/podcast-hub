@@ -1,8 +1,10 @@
-import { generateMockEpisode } from "@/lib/mock";
+import { mockEpisode } from "@/lib/mock";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { Contents, Users } from "@/types";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Article from "./_components/Article";
+
 export const metadata: Metadata = {
   title: "コンテンツ詳細 - Podcast Hub",
   description: "Podcastに貢献できる場所",
@@ -12,9 +14,12 @@ const ContentDetail = async ({ params }: { params: { id: string } }) => {
   const content = await fetchContent(params.id);
   const author =
     content.userId !== null ? await fetchUser(content.userId) : null;
-  const episode = generateMockEpisode(params.id);
 
-  return <Article content={content} author={author} episode={episode} />;
+  if (!content || !author) {
+    notFound();
+  }
+
+  return <Article content={content} author={author} episode={mockEpisode} />;
 };
 
 async function fetchContent(id: string): Promise<Contents> {

@@ -1,12 +1,14 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import type { Contents, Users } from "@prisma/client";
+import type { Database } from "@/types/database.types";
 import { Heart } from "lucide-react";
 import Link from "next/link";
 
+type Content = Database["public"]["Tables"]["contents"]["Row"];
+
 type ContentCardProps = {
-  content: Contents & {
-    user: Users;
+  content: Content & {
+    user: Database["public"]["Tables"]["users"]["Row"];
   };
 };
 

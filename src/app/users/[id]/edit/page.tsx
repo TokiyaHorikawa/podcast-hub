@@ -1,7 +1,7 @@
 import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { EditUserForm } from "./_components/EditUserForm";
+import EditUserForm from "./_components/EditUserForm";
 
 export const metadata: Metadata = {
   title: "プロフィール編集 | PodcastHub",

@@ -1,4 +1,4 @@
-import { generateMockEpisode } from "@/lib/mock";
+import { mockEpisode, mockPodcast } from "@/lib/mock";
 import type { Episode } from "@/lib/types";
 import type { Metadata } from "next";
 import EpisodeDetail from "../_components/EpisodeDetail";
@@ -9,13 +9,11 @@ export const metadata: Metadata = {
 };
 
 const EpisodePage = ({ params }: { params: { id: string } }) => {
-  const episode: Episode = getEpisode(params.id);
+  const episode = {
+    ...mockEpisode,
+    podcast: mockPodcast,
+  };
   return <EpisodeDetail episode={episode} />;
 };
-
-// モックデータを生成する関数
-function getEpisode(id: string): Episode {
-  return generateMockEpisode(id);
-}
 
 export default EpisodePage;
