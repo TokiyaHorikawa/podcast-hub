@@ -45,24 +45,13 @@ export default function NewPostForm({ user }: Props) {
     setError(null);
 
     try {
-      const response = await fetch("/api/contents", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...values,
-          userId: user.id,
-        }),
+      const { content } = await createPost({
+        title: values.title,
+        body: values.content,
+        userId: user.id,
       });
 
-      const content = await response.json();
-
-      if (!response.ok) {
-        throw new Error(content.error || "Something went wrong");
-      }
-
-      router.push(`/contents/${content.data.id}`);
+      router.push(`/contents/${content.id}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong");
     } finally {

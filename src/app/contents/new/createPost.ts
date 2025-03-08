@@ -1,37 +1,39 @@
 "use server";
 
-import { getUserFromServer } from "@/lib/supabase/getUserFromServer";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
-export type CreateContentInput = {
-  title: string;
-  body: string;
+import type { Content, CreateContentInput } from "@/lib/types";
+
+type Props = CreateContentInput;
+
+type ReturnType = {
+  content: Content;
 };
 
-export async function createPost(data: CreateContentInput) {
+export async function createPost({
+  title,
+  body,
+  userId,
+}: Props): Promise<ReturnType> {
   try {
-    const user = await getUserFromServer();
-
-    if (!user) {
-      return { error: "認証されていません" };
-    }
-
     const supabase = createServerSupabaseClient();
+    const response = await supabase
+      .from("contents")
+      .insert({
+        title,
+        body,
+        userId,
+      })
+      .select()
+      .single();
 
-    const { error } = await supabase.from("contents").insert({
-      title: data.title,
-      body: data.body,
-      userId: user.id,
-    });
-
-    if (error) {
-      console.error("コンテンツ作成エラー:", error);
-      return { error: "コンテンツの作成に失敗しました" };
+    if (response.error) {
+      throw new Error(response.error.message);
     }
 
-    return { success: true };
-  } catch (error) {
-    console.error("予期せぬエラー:", error);
-    return { error: "予期せぬエラーが発生しました" };
+    return { content: response.data };
+  } catch (error: unknown) {
+    console.error("Error creating post:", error);
+    throw error;
   }
 }
