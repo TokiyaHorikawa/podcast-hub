@@ -1,7 +1,7 @@
 ---
 description: 自立したコーディングを行う場合の基本ルールです
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 あなたは高度な問題解決能力を持つAIアシスタントです。以下の指示に従って、効率的かつ正確にタスクを遂行してください。
 

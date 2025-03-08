@@ -1,21 +1,23 @@
-import type {
-  Contents as PrismaContent,
-  Episodes as PrismaEpisode,
-  Users as PrismaUser,
-} from "@prisma/client";
+import type { Database } from "@/types/database.types";
 
-export type Content = PrismaContent;
-export type User = PrismaUser;
+export type Content = Database["public"]["Tables"]["contents"]["Row"];
+export type User = Database["public"]["Tables"]["users"]["Row"];
+export type Podcast = Database["public"]["Tables"]["podcasts"]["Row"];
+export type Episode = Database["public"]["Tables"]["episodes"]["Row"];
 
-// Episodeは現在のスキーマと異なる追加フィールドがあるため、拡張して定義
-export interface Episode extends PrismaEpisode {
-  imageUrl: string;
-  channel: Channel;
-}
+export type CreateContentInput = {
+  title: string;
+  body: string;
+  userId?: number;
+};
 
-export interface Channel {
-  id: string;
+export type CreateUserInput = {
   name: string;
-  description: string;
-  imageUrl: string;
-}
+  email: string;
+  bio?: string;
+};
+
+export type UpdateUserInput = {
+  name?: string;
+  bio?: string;
+};

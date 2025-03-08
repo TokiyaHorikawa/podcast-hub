@@ -1,12 +1,31 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { prisma } from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
+type CountableTables = "users" | "podcasts" | "contents";
+
+// カウントの抽象化関数 後で utils かに切り出したい
+async function getCount(target: CountableTables): Promise<number | null> {
+  const supabase = createServerSupabaseClient();
+  const { count, error } = await supabase.from(target).select("*", {
+    count: "exact",
+    head: true,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return count;
+}
+
 async function getStats() {
+  const supabase = createServerSupabaseClient();
+
   const [userCount, podcastCount, contentCount] = await Promise.all([
-    prisma.users.count(),
-    prisma.podcasts.count(),
-    prisma.contents.count(),
+    getCount("users"),
+    getCount("podcasts"),
+    getCount("contents"),
   ]);
 
   return {

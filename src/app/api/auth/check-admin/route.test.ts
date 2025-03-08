@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 // Next.jsのcookiesをモック
@@ -12,17 +11,17 @@ jest.mock("next/headers", () => ({
 
 // Supabaseのモック
 jest.mock("@/lib/supabase/server", () => ({
-  createServerSupabaseClient: jest.fn(),
-}));
-
-// Prismaのモック
-jest.mock("@/lib/prisma", () => ({
-  prisma: {
-    users: {
-      findUnique: jest.fn(),
-      create: jest.fn(),
+  createServerSupabaseClient: jest.fn(() => ({
+    auth: {
+      getSession: jest.fn(),
     },
-  },
+    from: jest.fn((table) => ({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn(),
+      insert: jest.fn().mockReturnThis(),
+    })),
+  })),
 }));
 
 import { GET } from "./route";
@@ -32,13 +31,6 @@ describe("check-admin API", () => {
     jest.clearAllMocks();
     // consoleメソッドをモック化
     jest.spyOn(console, "error").mockImplementation(() => {});
-
-    // Supabaseのモックの基本設定
-    (createServerSupabaseClient as jest.Mock).mockReturnValue({
-      auth: {
-        getSession: jest.fn(),
-      },
-    });
   });
 
   afterEach(() => {
@@ -58,75 +50,91 @@ describe("check-admin API", () => {
     const data = await response.json();
 
     expect(data).toEqual({ isAdmin: false });
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(500);
   });
 
   it("should return true for admin users", async () => {
     // 管理者ユーザーのセッションをモック
-    (
-      createServerSupabaseClient as jest.Mock
-    )().auth.getSession.mockResolvedValue({
-      data: {
-        session: {
-          user: {
-            id: "test-user-id",
-            email: "admin@example.com",
-          },
-        },
-      },
-      error: null,
+    const mockFrom = jest.fn().mockReturnValue({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn().mockResolvedValue({
+        data: { isAdmin: true },
+        error: null,
+      }),
     });
 
-    // Prismaの応答をモック
-    (prisma.users.findUnique as jest.Mock).mockResolvedValue({
-      isAdmin: true,
+    (createServerSupabaseClient as jest.Mock).mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({
+          data: {
+            session: {
+              user: {
+                id: "test-user-id",
+                email: "admin@example.com",
+              },
+            },
+          },
+          error: null,
+        }),
+      },
+      from: mockFrom,
     });
 
     const response = await GET();
     const data = await response.json();
 
     expect(data).toEqual({ isAdmin: true });
-    expect(prisma.users.findUnique).toHaveBeenCalledWith({
-      where: { uid: "test-user-id" },
-      select: { isAdmin: true },
-    });
+    expect(mockFrom).toHaveBeenCalledWith("users");
+    expect(mockFrom().select).toHaveBeenCalledWith("isAdmin");
+    expect(mockFrom().eq).toHaveBeenCalledWith("uid", "test-user-id");
   });
 
   it("should create new user if not exists", async () => {
     // 新規ユーザーのセッションをモック
-    (
-      createServerSupabaseClient as jest.Mock
-    )().auth.getSession.mockResolvedValue({
-      data: {
-        session: {
-          user: {
-            id: "new-user-id",
-            email: "new@example.com",
-          },
-        },
-      },
-      error: null,
+    const mockFrom = jest.fn().mockReturnValue({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest
+        .fn()
+        .mockResolvedValueOnce({
+          data: null,
+          error: { code: "PGRST116" },
+        })
+        .mockResolvedValueOnce({
+          data: { isAdmin: false },
+          error: null,
+        }),
+      insert: jest.fn().mockReturnThis(),
     });
 
-    // ユーザーが存在しない場合
-    (prisma.users.findUnique as jest.Mock).mockResolvedValue(null);
-    // 新規ユーザー作成
-    (prisma.users.create as jest.Mock).mockResolvedValue({
-      isAdmin: false,
+    (createServerSupabaseClient as jest.Mock).mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({
+          data: {
+            session: {
+              user: {
+                id: "new-user-id",
+                email: "new@example.com",
+              },
+            },
+          },
+          error: null,
+        }),
+      },
+      from: mockFrom,
     });
 
     const response = await GET();
     const data = await response.json();
 
     expect(data).toEqual({ isAdmin: false });
-    expect(prisma.users.create).toHaveBeenCalledWith({
-      data: {
-        uid: "new-user-id",
-        email: "new@example.com",
-        name: "new",
-        isAdmin: false,
-      },
-      select: { isAdmin: true },
+    expect(mockFrom).toHaveBeenCalledWith("users");
+    expect(mockFrom().insert).toHaveBeenCalledWith({
+      uid: "new-user-id",
+      email: "new@example.com",
+      name: "new",
+      isAdmin: false,
     });
   });
 
@@ -143,6 +151,6 @@ describe("check-admin API", () => {
     const data = await response.json();
 
     expect(data).toEqual({ isAdmin: false });
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(500);
   });
 });

@@ -1,17 +1,22 @@
-import { prisma } from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import type { Contents, Users } from "@/types";
 import ContentCard from "./_components/ContentCard";
 
 async function getContents() {
-  const contents = await prisma.contents.findMany({
-    take: 10,
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      user: true,
-    },
-  });
-  return contents || [];
+  const supabase = createServerSupabaseClient();
+
+  const { data: contents, error } = await supabase
+    .from("contents")
+    .select("*, user:users(*)")
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  if (error) {
+    console.error("コンテンツ取得エラー:", error);
+    return [];
+  }
+
+  return (contents as (Contents & { user: Users })[]) || [];
 }
 
 export default async function Home() {

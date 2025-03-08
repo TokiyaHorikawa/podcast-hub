@@ -1,23 +1,28 @@
 "use client";
 
-import { PrismaClient } from "@prisma/client";
-import supabase from "./supabase";
-
-const prisma = new PrismaClient();
+import type { Users } from "@/types";
+import supabase from "./client";
 
 // クライアントコンポーネントを想定している
-export async function getUserFromClient() {
+export async function getUserFromClient(): Promise<Users | null> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (!user || !user.email) {
     return null;
   }
 
-  const dbUser = await prisma.users.findFirst({
-    where: { email: user.email },
-  });
+  // Prismaの代わりにSupabaseを使用
+  const { data: dbUser, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", user.email)
+    .single();
+
+  if (error || !dbUser) {
+    return null;
+  }
 
   return dbUser;
 }
